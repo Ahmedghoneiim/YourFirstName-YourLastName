@@ -11,7 +11,7 @@
           </div>
         {% else %}
           <div class="product-image-wrapper placeholder">
-            <p>اختر منتج من Customizer</p>
+            <p>Select product</p>
           </div>
         {% endif %}
       </div>
@@ -19,7 +19,6 @@
   </div>
 </div>
 
-<!-- Modal Popup Container -->
 <div id="quick-view-modal" class="qv-modal-overlay" style="display: none;">
   <div class="qv-modal-card">
     <button type="button" class="qv-close-btn">&times;</button>
@@ -45,7 +44,6 @@
     display: flex; align-items: center; justify-content: center;
   }
 
-  /* Modal Overlay & Styling */
   .qv-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.6); z-index: 999999;
@@ -134,7 +132,7 @@
         const variant = product.variants.find(v => JSON.stringify(v.options) === JSON.stringify(selectedOptions)) || product.variants[0];
 
         const isBlack = selectedOptions.some(o => o.toLowerCase() === 'black');
-        const isMedium = selectedOptions.some(o => o.toLowerCase() === 'medium');
+        const isMedium = selectedOptions.some(o => o.toLowerCase() === 'medium' || o.toLowerCase() === 'm');
 
         let items = [{ id: variant.id, quantity: 1 }];
 
@@ -167,9 +165,8 @@
       })
       .then(res => res.json())
       .then(() => {
-        alert('Added to cart successfully!');
         modal.style.display = 'none';
-        window.location.reload();
+        window.location.href = '/cart';
       });
     }
   });
