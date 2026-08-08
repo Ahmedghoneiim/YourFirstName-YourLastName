@@ -10,7 +10,7 @@
     </a>
   </div>
 
-  <!-- Hero Content -->
+  <!-- Hero Content Box -->
   <div class="banner-content-box">
     <h1 class="hero-main-title">{{ section.settings.main_title }}</h1>
     <p class="hero-description">{{ section.settings.description_text }}</p>
@@ -32,26 +32,19 @@
     position: relative;
     width: 100%;
     min-height: 85vh;
-    background-size: contain;
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #ffffff !important; /* ضمان خلفية بيضاء */
     
-    /* عكس ألوان صورة الخلفية السوداء لتبدو بيضاء بأسود */
-    filter: invert(0); 
+    /* عكس ألوان الصورة السوداء لتصبح خطوط سوداء على خلفية بيضاء */
+    filter: invert(1);
     
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px 30px;
+    padding: 30px 40px;
     box-sizing: border-box;
     font-family: sans-serif;
-  }
-
-  /* إصلاح لون الخلفية المظلمة المعكوسة */
-  .custom-hero-banner {
-    background-blend-mode: difference;
-    background-color: #ffffff;
   }
 
   /* Top Bar */
@@ -60,6 +53,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    z-index: 2;
   }
 
   .brand-logo {
@@ -67,7 +61,7 @@
     font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #000;
+    color: #fff; /* محكوسة بسبب الفلتر فبتطلع أسود */
   }
 
   .top-center-text {
@@ -77,52 +71,47 @@
   }
 
   .yellow-btn-animated {
-    background-color: #FFF200;
-    color: #000;
-    padding: 8px 16px;
+    background-color: #000dff; /* عكس لون الأصفر بالفلتر ليظهر أصفر أصلي */
+    color: #fff;
+    padding: 10px 20px;
     text-decoration: none;
     font-size: 11px;
     font-weight: bold;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.3s ease;
   }
 
-  .yellow-btn-animated:hover {
-    background-color: #e6d800;
-    transform: translateY(-2px);
-  }
-
-  /* Hero Content */
+  /* Hero Content Box Positioning */
   .banner-content-box {
-    max-width: 340px;
+    max-width: 320px;
     margin-top: auto;
     margin-bottom: auto;
-    background: rgba(255, 255, 255, 0.85); /* خلفية خفيفة ناصعة للخط ليكون واضح جداً */
-    padding: 15px;
-    border-radius: 4px;
+    margin-left: 5%;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.65); /* مفرغ ومظبوط للخط */
+    z-index: 2;
   }
 
   .hero-main-title {
     font-size: 42px;
     font-weight: normal;
     margin: 0 0 12px 0;
-    color: #000;
+    color: #fff;
     line-height: 1.1;
     font-family: serif;
   }
 
   .hero-description {
     font-size: 11px;
-    color: #222;
+    color: #ddd;
     line-height: 1.4;
     margin-bottom: 20px;
   }
 
   .black-btn-animated {
-    background-color: #000;
-    color: #fff;
+    background-color: #fff;
+    color: #000;
     padding: 10px 20px;
     text-decoration: none;
     font-size: 11px;
@@ -132,21 +121,17 @@
     justify-content: space-between;
     min-width: 130px;
     letter-spacing: 1px;
-    transition: all 0.3s ease;
   }
 
-  .black-btn-animated:hover {
-    background-color: #222;
-    transform: translateY(-2px);
-  }
-
+  /* Bottom Bar */
   .banner-bottom-bar {
     text-align: center;
     font-size: 9px;
     letter-spacing: 1px;
-    color: #333;
+    color: #222;
     text-transform: uppercase;
     width: 100%;
+    z-index: 2;
   }
 </style>
 
