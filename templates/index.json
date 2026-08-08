@@ -86,11 +86,6 @@
         "button_link": ""
       }
     },
-    "image_grid_86A7T9": {
-      "type": "image-grid",
-      "name": "Custom Image Grid",
-      "settings": {}
-    },
     "image_grid_tezJU7": {
       "type": "image-grid",
       "blocks": {
@@ -147,7 +142,6 @@
     "image_banner",
     "featured_collection",
     "hero_gift_guide_4BmGf8",
-    "image_grid_86A7T9",
     "image_grid_tezJU7"
   ]
 }
