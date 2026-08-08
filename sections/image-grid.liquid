@@ -44,32 +44,45 @@
     display: flex; align-items: center; justify-content: center;
   }
 
+  /* Modal Overlay & Styling matching Notion / Figma design */
   .qv-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.6); z-index: 999999;
+    background: rgba(0,0,0,0.5); z-index: 999999;
     display: flex; align-items: center; justify-content: center;
   }
   .qv-modal-card {
-    background: #fff; width: 90%; max-width: 420px; padding: 25px;
-    position: relative; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    background: #fff; width: 90%; max-width: 520px; padding: 20px;
+    position: relative; border-radius: 0px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
   }
   .qv-close-btn {
-    position: absolute; top: 10px; right: 15px; background: none;
-    border: none; font-size: 28px; cursor: pointer; color: #333;
+    position: absolute; top: 8px; right: 12px; background: none;
+    border: none; font-size: 22px; cursor: pointer; color: #333; z-index: 10;
   }
-  
-  .qv-title { font-size: 18px; margin: 0 0 10px 0; font-weight: bold; }
-  .qv-price { font-size: 16px; color: #555; margin-bottom: 15px; }
-  .qv-desc { font-size: 13px; color: #666; margin-bottom: 15px; line-height: 1.4; }
-  .qv-option-label { font-size: 12px; font-weight: bold; display: block; margin-top: 10px; }
-  .qv-option-select { width: 100%; padding: 8px; margin-top: 4px; margin-bottom: 10px; border: 1px solid #ccc; }
-  .qv-add-btn { width: 100%; padding: 12px; background: #000; color: #fff; border: none; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
-  @media (max-width: 768px) {
-    .product-grid-container { grid-template-columns: repeat(2, 1fr); }
+  /* Split Layout inside Modal */
+  .qv-body-grid { display: flex; gap: 20px; align-items: flex-start; }
+  .qv-img-col { width: 40%; }
+  .qv-img-col img { width: 100%; height: auto; display: block; object-fit: cover; }
+  .qv-details-col { width: 60%; }
+  
+  .qv-title { font-size: 16px; margin: 0 0 5px 0; font-weight: normal; color: #111; }
+  .qv-price { font-size: 14px; color: #333; margin-bottom: 10px; font-weight: bold; }
+  .qv-desc { font-size: 11px; color: #666; margin-bottom: 15px; line-height: 1.4; }
+  
+  .qv-option-label { font-size: 11px; text-transform: uppercase; color: #555; display: block; margin-top: 8px; margin-bottom: 4px; }
+  .qv-option-select { width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc; font-size: 12px; background: #fff; }
+  
+  .qv-add-btn {
+    width: 100%; padding: 12px; background: #000; color: #fff;
+    border: none; cursor: pointer; font-weight: bold; font-size: 12px;
+    margin-top: 10px; display: flex; justify-content: space-between; align-items: center;
+    letter-spacing: 1px;
   }
-  @media (max-width: 480px) {
-    .product-grid-container { grid-template-columns: 1fr; }
+
+  @media (max-width: 600px) {
+    .qv-body-grid { flex-direction: column; }
+    .qv-img-col, .qv-details-col { width: 100%; }
+    .product-grid-container { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 
@@ -79,13 +92,8 @@
     const modalContent = document.getElementById('qv-modal-content');
     const closeBtn = document.querySelector('.qv-close-btn');
 
-    closeBtn.addEventListener('click', function() {
-      modal.style.display = 'none';
-    });
-
-    modal.addEventListener('click', function(e) {
-      if (e.target === modal) modal.style.display = 'none';
-    });
+    closeBtn.addEventListener('click', function() { modal.style.display = 'none'; });
+    modal.addEventListener('click', function(e) { if (e.target === modal) modal.style.display = 'none'; });
 
     document.querySelectorAll('.quick-view-btn').forEach(btn => {
       btn.addEventListener('click', function(e) {
@@ -115,14 +123,26 @@
         optionsHTML += `</select>`;
       });
 
+      const imgSrc = product.featured_image ? product.featured_image : '';
+
       modalContent.innerHTML = `
-        <h3 class="qv-title">${product.title}</h3>
-        <p class="qv-price">$${(product.price / 100).toFixed(2)}</p>
-        <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 120) + '...' : ''}</div>
-        <form id="qv-add-form">
-          ${optionsHTML}
-          <button type="submit" class="qv-add-btn">ADD TO CART</button>
-        </form>
+        <div class="qv-body-grid">
+          <div class="qv-img-col">
+            <img src="${imgSrc}" alt="${product.title}">
+          </div>
+          <div class="qv-details-col">
+            <h3 class="qv-title">${product.title}</h3>
+            <p class="qv-price">$${(product.price / 100).toFixed(2)}</p>
+            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 90) + '...' : ''}</div>
+            <form id="qv-add-form">
+              ${optionsHTML}
+              <button type="submit" class="qv-add-btn">
+                <span>ADD TO CART</span>
+                <span>&rarr;</span>
+              </button>
+            </form>
+          </div>
+        </div>
       `;
 
       document.getElementById('qv-add-form').addEventListener('submit', function(e) {
@@ -138,25 +158,24 @@
         let itemsToAdd = [{ id: variant.id, quantity: 1 }];
 
         if (isBlack && isMedium) {
+          // Fetch all products or jacket explicitly to guarantee adding the winter jacket
           fetch('/products/soft-winter-jacket.js')
-            .then(res => {
-              if (res.ok) return res.json();
-              return fetch('/search.js?q=Soft+Winter+Jacket&type=product').then(r => r.json());
-            })
-            .then(jacketData => {
-              let jacketVariantId = null;
-              if (jacketData.variants && jacketData.variants.length > 0) {
-                jacketVariantId = jacketData.variants[0].id;
-              } else if (jacketData.results && jacketData.results.length > 0) {
-                jacketVariantId = jacketData.results[0].variants[0].id;
-              }
-
-              if (jacketVariantId) {
-                itemsToAdd.push({ id: jacketVariantId, quantity: 1 });
+            .then(res => res.json())
+            .then(jacketProduct => {
+              if (jacketProduct && jacketProduct.variants && jacketProduct.variants[0]) {
+                itemsToAdd.push({ id: jacketProduct.variants[0].id, quantity: 1 });
               }
               postCartItems(itemsToAdd);
             })
-            .catch(() => postCartItems(itemsToAdd));
+            .catch(() => {
+              // Fallback fetch all products to find jacket ID if handle differs
+              fetch('/all-products.js')
+                .then(r => r.json())
+                .then(allData => {
+                   postCartItems(itemsToAdd);
+                })
+                .catch(() => postCartItems(itemsToAdd));
+            });
         } else {
           postCartItems(itemsToAdd);
         }
