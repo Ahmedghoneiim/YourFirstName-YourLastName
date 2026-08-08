@@ -44,14 +44,14 @@
     display: flex; align-items: center; justify-content: center;
   }
 
-  /* Modal Styling matching design */
+  /* Modal Base Styling */
   .qv-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.4); z-index: 999999;
     display: flex; align-items: center; justify-content: center;
   }
   .qv-modal-card {
-    background: #fff; width: 90%; max-width: 440px; padding: 20px;
+    background: #fff; width: 90%; max-width: 360px; padding: 20px;
     position: relative; border-radius: 0px; box-shadow: 0 4px 25px rgba(0,0,0,0.15);
   }
   .qv-close-btn {
@@ -59,45 +59,47 @@
     border: none; font-size: 18px; cursor: pointer; color: #333; z-index: 10;
   }
 
-  .qv-body-grid { display: flex; gap: 15px; }
-  .qv-img-col { width: 42%; }
-  .qv-img-col img { width: 100%; height: auto; display: block; object-fit: cover; }
-  .qv-details-col { width: 58%; display: flex; flex-direction: column; justify-content: space-between; }
+  /* Top Section: Image + Info side by side */
+  .qv-top-row { display: flex; gap: 15px; margin-bottom: 12px; }
+  .qv-img-col { width: 45%; flex-shrink: 0; }
+  .qv-img-col img { width: 100%; height: auto; display: block; object-fit: cover; aspect-ratio: 1/1; }
+  .qv-details-col { width: 55%; display: flex; flex-direction: column; justify-content: flex-start; }
   
-  .qv-title { font-size: 14px; margin: 0 0 4px 0; font-weight: normal; color: #222; }
+  .qv-title { font-size: 14px; margin: 0 0 6px 0; font-weight: normal; color: #222; }
   .qv-price { font-size: 13px; color: #222; margin-bottom: 8px; font-weight: bold; }
-  .qv-desc { font-size: 10px; color: #666; margin-bottom: 12px; line-height: 1.35; }
+  .qv-desc { font-size: 10px; color: #666; line-height: 1.35; margin: 0; }
+
+  /* Full Width Form Elements below top row */
+  .qv-form-full { width: 100%; }
+  .qv-label { font-size: 11px; text-transform: capitalize; color: #555; display: block; margin-top: 10px; margin-bottom: 6px; }
   
-  .qv-label { font-size: 10px; text-transform: capitalize; color: #555; display: block; margin-top: 6px; margin-bottom: 4px; }
-  
-  /* Color Swatches Grid */
-  .qv-swatch-wrapper { display: flex; border: 1px solid #111; margin-bottom: 10px; }
+  /* Color Swatches - Full Width Box */
+  .qv-swatch-wrapper { display: flex; border: 1px solid #111; width: 100%; margin-bottom: 10px; }
   .qv-swatch-btn {
-    flex: 1; padding: 6px 0; background: #fff; border: none; font-size: 11px;
+    flex: 1; padding: 8px 0; background: #fff; border: none; font-size: 11px;
     cursor: pointer; text-align: center; color: #111; border-right: 1px solid #111;
     transition: all 0.2s ease;
   }
   .qv-swatch-btn:last-child { border-right: none; }
   .qv-swatch-btn.active { background: #000; color: #fff; font-weight: bold; }
 
-  /* Dropdown Select */
+  /* Size Dropdown - Full Width */
   .qv-size-select {
-    width: 100%; padding: 7px 10px; border: 1px solid #111;
-    font-size: 11px; background: #fff; margin-bottom: 12px; cursor: pointer;
-    border-radius: 0; outline: none;
+    width: 100%; padding: 8px 10px; border: 1px solid #111;
+    font-size: 11px; background: #fff; margin-bottom: 15px; cursor: pointer;
+    border-radius: 0; outline: none; box-sizing: border-box;
   }
   
+  /* Add To Cart Button - Full Width */
   .qv-add-btn {
-    width: 100%; padding: 10px 15px; background: #000; color: #fff;
+    width: 100%; padding: 11px 15px; background: #000; color: #fff;
     border: none; cursor: pointer; font-weight: bold; font-size: 11px;
     display: flex; justify-content: space-between; align-items: center;
-    letter-spacing: 0.5px; margin-top: 5px;
+    letter-spacing: 0.5px; box-sizing: border-box;
   }
 
-  @media (max-width: 550px) {
-    .qv-body-grid { flex-direction: column; }
-    .qv-img-col, .qv-details-col { width: 100%; }
-    .product-grid-container { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) {
+    .qv-modal-card { width: 92%; padding: 15px; }
   }
 </style>
 
@@ -161,26 +163,24 @@
       const imgSrc = product.featured_image ? product.featured_image : '';
 
       modalContent.innerHTML = `
-        <div class="qv-body-grid">
+        <div class="qv-top-row">
           <div class="qv-img-col">
             <img src="${imgSrc}" alt="${product.title}">
           </div>
           <div class="qv-details-col">
-            <div>
-              <h3 class="qv-title">${product.title}</h3>
-              <p class="qv-price">${(product.price / 100).toFixed(2)}€</p>
-              <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 75) + '...' : ''}</div>
-            </div>
-            <form id="qv-add-form">
-              ${colorHTML}
-              ${sizeHTML}
-              <button type="submit" class="qv-add-btn">
-                <span>ADD TO CART</span>
-                <span>&rarr;</span>
-              </button>
-            </form>
+            <h3 class="qv-title">${product.title}</h3>
+            <p class="qv-price">${(product.price / 100).toFixed(2)}€</p>
+            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 70) + '...' : ''}</div>
           </div>
         </div>
+        <form id="qv-add-form" class="qv-form-full">
+          ${colorHTML}
+          ${sizeHTML}
+          <button type="submit" class="qv-add-btn">
+            <span>ADD TO CART</span>
+            <span>&rarr;</span>
+          </button>
+        </form>
       `;
 
       // Swatch Click Logic
@@ -192,7 +192,7 @@
         });
       });
 
-      // Dropdown Logic
+      // Size Dropdown Logic
       const sizeSelect = document.getElementById('qv-size-select-box');
       if (sizeSelect) {
         sizeSelect.addEventListener('change', function() {
@@ -200,6 +200,7 @@
         });
       }
 
+      // Submit Form Logic
       document.getElementById('qv-add-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
