@@ -32,9 +32,14 @@
     position: relative;
     width: 100%;
     min-height: 85vh;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
+    background-color: #ffffff !important; /* ضمان خلفية بيضاء */
+    
+    /* عكس ألوان صورة الخلفية السوداء لتبدو بيضاء بأسود */
+    filter: invert(0); 
+    
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -43,7 +48,13 @@
     font-family: sans-serif;
   }
 
-  /* Top Bar Header */
+  /* إصلاح لون الخلفية المظلمة المعكوسة */
+  .custom-hero-banner {
+    background-blend-mode: difference;
+    background-color: #ffffff;
+  }
+
+  /* Top Bar */
   .banner-top-bar {
     display: flex;
     justify-content: space-between;
@@ -65,7 +76,6 @@
     letter-spacing: 0.5px;
   }
 
-  /* Yellow Animated Button */
   .yellow-btn-animated {
     background-color: #FFF200;
     color: #000;
@@ -76,7 +86,6 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    border-radius: 0px;
     transition: all 0.3s ease;
   }
 
@@ -85,16 +94,14 @@
     transform: translateY(-2px);
   }
 
-  .yellow-btn-animated:hover .btn-arrow {
-    transform: translateX(4px);
-  }
-
-  /* Main Hero Box Left */
+  /* Hero Content */
   .banner-content-box {
-    max-width: 320px;
+    max-width: 340px;
     margin-top: auto;
     margin-bottom: auto;
-    padding-left: 10px;
+    background: rgba(255, 255, 255, 0.85); /* خلفية خفيفة ناصعة للخط ليكون واضح جداً */
+    padding: 15px;
+    border-radius: 4px;
   }
 
   .hero-main-title {
@@ -108,12 +115,11 @@
 
   .hero-description {
     font-size: 11px;
-    color: #444;
+    color: #222;
     line-height: 1.4;
     margin-bottom: 20px;
   }
 
-  /* Black Animated Button */
   .black-btn-animated {
     background-color: #000;
     color: #fff;
@@ -134,15 +140,6 @@
     transform: translateY(-2px);
   }
 
-  .black-btn-animated:hover .btn-arrow {
-    transform: translateX(4px);
-  }
-
-  .btn-arrow {
-    transition: transform 0.3s ease;
-  }
-
-  /* Bottom Bar */
   .banner-bottom-bar {
     text-align: center;
     font-size: 9px;
@@ -150,12 +147,6 @@
     color: #333;
     text-transform: uppercase;
     width: 100%;
-  }
-
-  @media (max-width: 768px) {
-    .custom-hero-banner { padding: 15px; }
-    .top-center-text { display: none; }
-    .hero-main-title { font-size: 32px; }
   }
 </style>
 
