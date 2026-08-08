@@ -28,11 +28,9 @@
   </div>
 </div>
 
-{% assign bonus_jacket = section.settings.bonus_product %}
-
 <style>
-  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: inherit; }
-  .section-title { font-size: 24px; margin-bottom: 20px; font-weight: normal; }
+  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: sans-serif; }
+  .section-title { font-size: 26px; margin-bottom: 25px; font-weight: normal; color: #111; }
   .product-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .grid-product-card { position: relative; }
   .product-image-wrapper { position: relative; width: 100%; padding-top: 100%; overflow: hidden; }
@@ -46,46 +44,54 @@
     display: flex; align-items: center; justify-content: center;
   }
 
+  /* Modal Styling matching design */
   .qv-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.4); z-index: 999999;
     display: flex; align-items: center; justify-content: center;
   }
   .qv-modal-card {
-    background: #fff; width: 90%; max-width: 500px; padding: 25px;
-    position: relative; border-radius: 0px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    background: #fff; width: 90%; max-width: 440px; padding: 20px;
+    position: relative; border-radius: 0px; box-shadow: 0 4px 25px rgba(0,0,0,0.15);
   }
   .qv-close-btn {
-    position: absolute; top: 12px; right: 15px; background: none;
-    border: none; font-size: 20px; cursor: pointer; color: #000; z-index: 10;
+    position: absolute; top: 10px; right: 12px; background: none;
+    border: none; font-size: 18px; cursor: pointer; color: #333; z-index: 10;
   }
 
-  .qv-body-grid { display: flex; gap: 20px; }
-  .qv-img-col { width: 45%; }
+  .qv-body-grid { display: flex; gap: 15px; }
+  .qv-img-col { width: 42%; }
   .qv-img-col img { width: 100%; height: auto; display: block; object-fit: cover; }
-  .qv-details-col { width: 55%; display: flex; flex-direction: column; }
+  .qv-details-col { width: 58%; display: flex; flex-direction: column; justify-content: space-between; }
   
-  .qv-title { font-size: 16px; margin: 0 0 8px 0; font-weight: normal; color: #111; }
-  .qv-price { font-size: 14px; color: #111; margin-bottom: 12px; font-weight: bold; }
-  .qv-desc { font-size: 11px; color: #666; margin-bottom: 15px; line-height: 1.4; }
+  .qv-title { font-size: 14px; margin: 0 0 4px 0; font-weight: normal; color: #222; }
+  .qv-price { font-size: 13px; color: #222; margin-bottom: 8px; font-weight: bold; }
+  .qv-desc { font-size: 10px; color: #666; margin-bottom: 12px; line-height: 1.35; }
   
-  .qv-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #777; display: block; margin-top: 10px; margin-bottom: 6px; }
+  .qv-label { font-size: 10px; text-transform: capitalize; color: #555; display: block; margin-top: 6px; margin-bottom: 4px; }
   
-  .color-swatches-container { display: flex; border: 1px solid #ccc; margin-bottom: 12px; }
-  .color-swatch-btn {
-    flex: 1; padding: 8px 0; background: #fff; border: none; font-size: 12px; cursor: pointer;
-    text-align: center; border-right: 1px solid #ccc; color: #333;
+  /* Color Swatches Grid */
+  .qv-swatch-wrapper { display: flex; border: 1px solid #111; margin-bottom: 10px; }
+  .qv-swatch-btn {
+    flex: 1; padding: 6px 0; background: #fff; border: none; font-size: 11px;
+    cursor: pointer; text-align: center; color: #111; border-right: 1px solid #111;
+    transition: all 0.2s ease;
   }
-  .color-swatch-btn:last-child { border-right: none; }
-  .color-swatch-btn.active { background: #000; color: #fff; font-weight: bold; }
+  .qv-swatch-btn:last-child { border-right: none; }
+  .qv-swatch-btn.active { background: #000; color: #fff; font-weight: bold; }
 
-  .qv-size-select { width: 100%; padding: 10px; border: 1px solid #ccc; font-size: 12px; background: #fff; margin-bottom: 15px; cursor: pointer; }
+  /* Dropdown Select */
+  .qv-size-select {
+    width: 100%; padding: 7px 10px; border: 1px solid #111;
+    font-size: 11px; background: #fff; margin-bottom: 12px; cursor: pointer;
+    border-radius: 0; outline: none;
+  }
   
   .qv-add-btn {
-    width: 100%; padding: 12px; background: #000; color: #fff;
+    width: 100%; padding: 10px 15px; background: #000; color: #fff;
     border: none; cursor: pointer; font-weight: bold; font-size: 11px;
     display: flex; justify-content: space-between; align-items: center;
-    letter-spacing: 1px; margin-top: auto;
+    letter-spacing: 0.5px; margin-top: 5px;
   }
 
   @media (max-width: 550px) {
@@ -97,9 +103,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const bonusJacketVariantId = "{% if bonus_jacket != blank %}{{ bonus_jacket.selected_or_first_available_variant.id }}{% endif %}";
-    const bonusJacketHandle = "{% if bonus_jacket != blank %}{{ bonus_jacket.handle }}{% endif %}";
-
     const modal = document.getElementById('quick-view-modal');
     const modalContent = document.getElementById('qv-modal-content');
     const closeBtn = document.querySelector('.qv-close-btn');
@@ -131,27 +134,28 @@
       let selectedColor = '';
       let selectedSize = '';
 
-      const colorOption = product.options.find(o => o.name.toLowerCase().includes('color'));
-      const sizeOption = product.options.find(o => o.name.toLowerCase().includes('size'));
+      const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
+      const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
 
-      let colorsHTML = '';
-      if (colorOption) {
-        selectedColor = colorOption.values[0];
-        colorsHTML += '<div class="color-swatches-container">';
-        colorOption.values.forEach((val, idx) => {
-          colorsHTML += `<button type="button" class="color-swatch-btn ${idx === 0 ? 'active' : ''}" data-value="${val}">${val}</button>`;
+      let colorHTML = '';
+      if (colorOpt) {
+        selectedColor = colorOpt.values[0];
+        colorHTML += `<label class="qv-label">${colorOpt.name}</label><div class="qv-swatch-wrapper">`;
+        colorOpt.values.forEach((val, idx) => {
+          colorHTML += `<button type="button" class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" data-value="${val}">${val}</button>`;
         });
-        colorsHTML += '</div>';
+        colorHTML += `</div>`;
       }
 
-      let sizesHTML = '';
-      if (sizeOption) {
-        selectedSize = sizeOption.values[0];
-        sizesHTML += '<select class="qv-size-select" id="qv-size-dropdown">';
-        sizeOption.values.forEach(val => {
-          sizesHTML += `<option value="${val}">${val}</option>`;
+      let sizeHTML = '';
+      if (sizeOpt) {
+        sizeHTML += `<label class="qv-label">${sizeOpt.name}</label>`;
+        sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
+        sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
+        sizeOpt.values.forEach(val => {
+          sizeHTML += `<option value="${val}">${val}</option>`;
         });
-        sizesHTML += '</select>';
+        sizeHTML += `</select>`;
       }
 
       const imgSrc = product.featured_image ? product.featured_image : '';
@@ -162,12 +166,14 @@
             <img src="${imgSrc}" alt="${product.title}">
           </div>
           <div class="qv-details-col">
-            <h3 class="qv-title">${product.title}</h3>
-            <p class="qv-price">$${(product.price / 100).toFixed(2)}</p>
-            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 85) + '...' : ''}</div>
+            <div>
+              <h3 class="qv-title">${product.title}</h3>
+              <p class="qv-price">${(product.price / 100).toFixed(2)}€</p>
+              <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 75) + '...' : ''}</div>
+            </div>
             <form id="qv-add-form">
-              ${colorOption ? `<label class="qv-label">COLOR</label>${colorsHTML}` : ''}
-              ${sizeOption ? `<label class="qv-label">SIZE</label>${sizesHTML}` : ''}
+              ${colorHTML}
+              ${sizeHTML}
               <button type="submit" class="qv-add-btn">
                 <span>ADD TO CART</span>
                 <span>&rarr;</span>
@@ -177,17 +183,19 @@
         </div>
       `;
 
-      document.querySelectorAll('.color-swatch-btn').forEach(btn => {
+      // Swatch Click Logic
+      document.querySelectorAll('.qv-swatch-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-          document.querySelectorAll('.color-swatch-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.qv-swatch-btn').forEach(b => b.classList.remove('active'));
           this.classList.add('active');
           selectedColor = this.getAttribute('data-value');
         });
       });
 
-      const sizeDropdown = document.getElementById('qv-size-dropdown');
-      if (sizeDropdown) {
-        sizeDropdown.addEventListener('change', function() {
+      // Dropdown Logic
+      const sizeSelect = document.getElementById('qv-size-select-box');
+      if (sizeSelect) {
+        sizeSelect.addEventListener('change', function() {
           selectedSize = this.value;
         });
       }
@@ -210,26 +218,15 @@
         let itemsToAdd = [{ id: matchedVariant.id, quantity: 1 }];
 
         if (isBlack && isMedium) {
-          if (bonusJacketVariantId) {
-            itemsToAdd.push({ id: parseInt(bonusJacketVariantId), quantity: 1 });
-            postCartItems(itemsToAdd);
-          } else {
-            // Fallback search if setting is empty
-            fetch('/search.js?q=Soft+Winter+Jacket&type=product')
-              .then(r => r.json())
-              .then(searchData => {
-                 if (searchData.results && searchData.results.length > 0) {
-                    fetch('/products/' + searchData.results[0].handle + '.js')
-                      .then(res => res.json())
-                      .then(j => {
-                        itemsToAdd.push({ id: j.variants[0].id, quantity: 1 });
-                        postCartItems(itemsToAdd);
-                      });
-                 } else {
-                    postCartItems(itemsToAdd);
-                 }
-              }).catch(() => postCartItems(itemsToAdd));
-          }
+          fetch('/products/dark-winter-jacket.js')
+            .then(res => res.json())
+            .then(jacketProduct => {
+              if (jacketProduct && jacketProduct.variants && jacketProduct.variants[0]) {
+                itemsToAdd.push({ id: jacketProduct.variants[0].id, quantity: 1 });
+              }
+              postCartItems(itemsToAdd);
+            })
+            .catch(() => postCartItems(itemsToAdd));
         } else {
           postCartItems(itemsToAdd);
         }
@@ -254,13 +251,7 @@
 {% schema %}
 {
   "name": "Custom Product Grid",
-  "settings": [
-    {
-      "type": "product",
-      "id": "bonus_product",
-      "label": "Auto-Add Bonus Product (Soft Winter Jacket)"
-    }
-  ],
+  "settings": [],
   "blocks": [
     {
       "type": "product_block",
