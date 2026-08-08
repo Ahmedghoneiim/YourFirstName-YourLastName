@@ -85,11 +85,69 @@
         "button_label": "SHOP NOW",
         "button_link": ""
       }
+    },
+    "image_grid_86A7T9": {
+      "type": "image-grid",
+      "blocks": {
+        "image_card_am9MMh": {
+          "type": "image_card",
+          "settings": {
+            "title": "Shop Item",
+            "link": ""
+          }
+        },
+        "image_card_Y7jiGz": {
+          "type": "image_card",
+          "settings": {
+            "title": "Shop Item",
+            "link": ""
+          }
+        },
+        "image_card_CREKXc": {
+          "type": "image_card",
+          "settings": {
+            "title": "Shop Item",
+            "link": ""
+          }
+        },
+        "image_card_XzX9hh": {
+          "type": "image_card",
+          "settings": {
+            "title": "Shop Item",
+            "link": ""
+          }
+        },
+        "image_card_hUDYVd": {
+          "type": "image_card",
+          "settings": {
+            "title": "Shop Item",
+            "link": ""
+          }
+        },
+        "image_card_tKxhGp": {
+          "type": "image_card",
+          "settings": {
+            "title": "Shop Item",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_card_am9MMh",
+        "image_card_Y7jiGz",
+        "image_card_CREKXc",
+        "image_card_XzX9hh",
+        "image_card_hUDYVd",
+        "image_card_tKxhGp"
+      ],
+      "name": "Custom Image Grid",
+      "settings": {}
     }
   },
   "order": [
     "image_banner",
     "featured_collection",
-    "hero_gift_guide_4BmGf8"
+    "hero_gift_guide_4BmGf8",
+    "image_grid_86A7T9"
   ]
 }
