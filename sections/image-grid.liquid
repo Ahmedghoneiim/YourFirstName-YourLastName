@@ -6,7 +6,7 @@
       <div class="grid-product-card" {{ block.shopify_attributes }}>
         {% if product != blank %}
           <div class="product-image-wrapper">
-            <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title }}" loading="lazy">
+            <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="lazy">
             <button type="button" class="quick-view-btn" data-handle="{{ product.handle }}">+</button>
           </div>
         {% else %}
@@ -128,36 +128,42 @@
       document.getElementById('qv-add-form').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const selectedOptions = Array.from(this.querySelectorAll('.qv-option-select')).map(s => s.value);
+        const selects = Array.from(this.querySelectorAll('.qv-option-select'));
+        const selectedOptions = selects.map(s => s.value);
         const variant = product.variants.find(v => JSON.stringify(v.options) === JSON.stringify(selectedOptions)) || product.variants[0];
 
-        const isBlack = selectedOptions.some(o => o.toLowerCase() === 'black');
-        const isMedium = selectedOptions.some(o => o.toLowerCase() === 'medium' || o.toLowerCase() === 'm');
+        const isBlack = selectedOptions.some(val => val.toLowerCase() === 'black');
+        const isMedium = selectedOptions.some(val => val.toLowerCase() === 'medium' || val.toLowerCase() === 'm');
 
-        let items = [{ id: variant.id, quantity: 1 }];
+        let itemsToAdd = [{ id: variant.id, quantity: 1 }];
 
         if (isBlack && isMedium) {
-          fetch('/search.js?q=Soft Winter Jacket&type=product')
-            .then(res => res.json())
-            .then(data => {
-              if (data.results && data.results.length > 0) {
-                 fetch('/products/' + data.results[0].handle + '.js')
-                   .then(r => r.json())
-                   .then(jacketProduct => {
-                     items.push({ id: jacketProduct.variants[0].id, quantity: 1 });
-                     executeAddToCart(items);
-                   });
-              } else {
-                 executeAddToCart(items);
+          fetch('/products/soft-winter-jacket.js')
+            .then(res => {
+              if (res.ok) return res.json();
+              return fetch('/search.js?q=Soft+Winter+Jacket&type=product').then(r => r.json());
+            })
+            .then(jacketData => {
+              let jacketVariantId = null;
+              if (jacketData.variants && jacketData.variants.length > 0) {
+                jacketVariantId = jacketData.variants[0].id;
+              } else if (jacketData.results && jacketData.results.length > 0) {
+                jacketVariantId = jacketData.results[0].variants[0].id;
               }
-            }).catch(() => executeAddToCart(items));
+
+              if (jacketVariantId) {
+                itemsToAdd.push({ id: jacketVariantId, quantity: 1 });
+              }
+              postCartItems(itemsToAdd);
+            })
+            .catch(() => postCartItems(itemsToAdd));
         } else {
-          executeAddToCart(items);
+          postCartItems(itemsToAdd);
         }
       });
     }
 
-    function executeAddToCart(items) {
+    function postCartItems(items) {
       fetch('/cart/add.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
