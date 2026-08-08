@@ -136,11 +136,28 @@
       ],
       "name": "Custom Product Grid",
       "settings": {}
+    },
+    "hero_banner_NiUPnY": {
+      "type": "hero-banner",
+      "name": "Custom Hero Banner",
+      "settings": {
+        "bg_image": "shopify://shop_images/design.png",
+        "logo_text": "TISSO VISON",
+        "top_center_text": "Find the ideal gift for your loved ones.",
+        "yellow_btn_text": "CHOOSE GIFT",
+        "yellow_btn_link": "",
+        "main_title": "The Gift Guide",
+        "description_text": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.",
+        "shop_btn_text": "SHOP NOW",
+        "shop_btn_link": "",
+        "bottom_footer_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL."
+      }
     }
   },
   "order": [
     "image_banner",
     "featured_collection",
+    "hero_banner_NiUPnY",
     "hero_gift_guide_4BmGf8",
     "image_grid_tezJU7"
   ]
