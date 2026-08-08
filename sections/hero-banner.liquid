@@ -32,17 +32,13 @@
     position: relative;
     width: 100%;
     min-height: 85vh;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
-    /* عكس ألوان الصورة السوداء لتصبح خطوط سوداء على خلفية بيضاء */
-    filter: invert(1);
-    
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 30px 40px;
+    padding: 30px 60px; /* مسافة أمان لمنع خروج العناصر للجانبين */
     box-sizing: border-box;
     font-family: sans-serif;
   }
@@ -61,18 +57,18 @@
     font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #fff; /* محكوسة بسبب الفلتر فبتطلع أسود */
+    color: #ffffff;
   }
 
   .top-center-text {
     font-size: 11px;
-    color: #333;
+    color: #cccccc;
     letter-spacing: 0.5px;
   }
 
   .yellow-btn-animated {
-    background-color: #000dff; /* عكس لون الأصفر بالفلتر ليظهر أصفر أصلي */
-    color: #fff;
+    background-color: #FFF200;
+    color: #000000;
     padding: 10px 20px;
     text-decoration: none;
     font-size: 11px;
@@ -80,16 +76,22 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    transition: all 0.3s ease;
   }
 
-  /* Hero Content Box Positioning */
+  .yellow-btn-animated:hover {
+    background-color: #e6d800;
+    transform: translateY(-2px);
+  }
+
+  /* Hero Content Box (إدخال الكارت داخل الصورة وإلغاء المربع الرمادي) */
   .banner-content-box {
     max-width: 320px;
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 5%;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.65); /* مفرغ ومظبوط للخط */
+    margin-left: 20px; /* تحريك النص للداخل */
+    padding: 0; /* إلغاء الـ padding الخارجي الرمادي */
+    background: transparent !important; /* إلغاء المربع الرمادي الشفاف */
     z-index: 2;
   }
 
@@ -97,21 +99,21 @@
     font-size: 42px;
     font-weight: normal;
     margin: 0 0 12px 0;
-    color: #fff;
+    color: #ffffff;
     line-height: 1.1;
     font-family: serif;
   }
 
   .hero-description {
     font-size: 11px;
-    color: #ddd;
+    color: #dddddd;
     line-height: 1.4;
     margin-bottom: 20px;
   }
 
   .black-btn-animated {
-    background-color: #fff;
-    color: #000;
+    background-color: #ffffff;
+    color: #000000;
     padding: 10px 20px;
     text-decoration: none;
     font-size: 11px;
@@ -121,6 +123,21 @@
     justify-content: space-between;
     min-width: 130px;
     letter-spacing: 1px;
+    transition: all 0.3s ease;
+  }
+
+  .black-btn-animated:hover {
+    background-color: #e2e2e2;
+    transform: translateY(-2px);
+  }
+
+  .btn-arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .black-btn-animated:hover .btn-arrow,
+  .yellow-btn-animated:hover .btn-arrow {
+    transform: translateX(4px);
   }
 
   /* Bottom Bar */
@@ -128,10 +145,17 @@
     text-align: center;
     font-size: 9px;
     letter-spacing: 1px;
-    color: #222;
+    color: #cccccc;
     text-transform: uppercase;
     width: 100%;
     z-index: 2;
+  }
+
+  @media (max-width: 768px) {
+    .custom-hero-banner { padding: 20px; }
+    .banner-content-box { margin-left: 0; }
+    .top-center-text { display: none; }
+    .hero-main-title { font-size: 32px; }
   }
 </style>
 
