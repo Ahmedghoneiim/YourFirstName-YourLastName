@@ -1,18 +1,17 @@
-<div class="custom-hero-banner">
-  
-  <!-- Top Bar Header -->
-  <div class="banner-top-bar">
-    <div class="brand-logo">{{ section.settings.logo_text }}</div>
-    <div class="top-center-text">{{ section.settings.top_center_text }}</div>
-    <a href="{{ section.settings.yellow_btn_link }}" class="yellow-btn-animated">
-      <span>{{ section.settings.yellow_btn_text }}</span>
-      <span class="btn-arrow">&rarr;</span>
-    </a>
-  </div>
+<div class="hero-wrapper">
+  <div class="custom-hero-banner" style="background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');">
+    
+    <div class="banner-top-bar">
+      <div class="brand-logo">{{ section.settings.logo_text }}</div>
+      <div class="top-center-text">{{ section.settings.top_center_text }}</div>
+      <a href="{{ section.settings.yellow_btn_link }}" class="yellow-btn-animated">
+        <span>{{ section.settings.yellow_btn_text }}</span>
+        <span class="btn-arrow">&rarr;</span>
+      </a>
+    </div>
 
-  <!-- Main Hero Body Grid Structure -->
-  <div class="banner-body-grid" style="background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');">
-    <div class="grid-left-content">
+    <!-- المربع ده متثبت بالبكسل بالنسبة لأبعاد الـ Banner -->
+    <div class="banner-content-box">
       <h1 class="hero-main-title">{{ section.settings.main_title }}</h1>
       <p class="hero-description">{{ section.settings.description_text }}</p>
       <a href="{{ section.settings.shop_btn_link }}" class="black-btn-animated">
@@ -20,115 +19,67 @@
         <span class="btn-arrow">&rarr;</span>
       </a>
     </div>
-    <div class="grid-right-space"></div>
-  </div>
 
-  <!-- Bottom Bar Footer -->
-  <div class="banner-bottom-bar">
-    <span>{{ section.settings.bottom_footer_text }}</span>
-  </div>
+    <div class="banner-bottom-bar">
+      <span>{{ section.settings.bottom_footer_text }}</span>
+    </div>
 
+  </div>
 </div>
 
 <style>
+  .hero-wrapper {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
   .custom-hero-banner {
+    position: relative;
     width: 100%;
+    padding-top: 56.25%; /* نسبة 16:9 أبعاد ثابتة تمسح أي ترحيل */
+    background-size: 100% 100% !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
     background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 
-  /* Header */
   .banner-top-bar {
+    position: absolute;
+    top: 24px;
+    left: 40px;
+    right: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 40px;
-    background-color: #ffffff;
+    z-index: 5;
   }
 
-  .brand-logo {
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: 1.2px;
-    color: #000000;
+  .brand-logo { font-size: 16px; font-weight: 800; color: #000; }
+  .top-center-text { font-size: 11px; color: #333; }
+  .yellow-btn-animated { background: #FFF200; color: #000; padding: 10px 20px; font-size: 11px; font-weight: 700; text-decoration: none; }
+
+  /* مكان النص مضبوط بالملي في الفراغ الأبيض */
+  .banner-content-box {
+    position: absolute;
+    top: 55%; 
+    left: 4.5%;
+    width: 32%;
+    z-index: 5;
   }
 
-  .top-center-text {
-    font-size: 11px;
-    color: #333333;
-  }
+  .hero-main-title { font-size: 3.5vw; font-weight: 600; color: #000; margin: 0 0 12px 0; line-height: 1; }
+  .hero-description { font-size: 0.85vw; color: #222; line-height: 1.4; margin-bottom: 20px; }
+  .black-btn-animated { background: #000; color: #fff; padding: 10px 20px; font-size: 0.75vw; font-weight: 700; text-decoration: none; display: inline-flex; justify-content: space-between; width: 120px; }
 
-  .yellow-btn-animated {
-    background-color: #FFF200;
-    color: #000000;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* Main Hero Section Grid */
-  .banner-body-grid {
-    width: 100%;
-  min-height: 650px;
-  background-size: cover !important;
-  background-position: center top !important;
-  background-repeat: no-repeat !important;
-  position: relative;
-  }
-
-  .grid-left-content {
-  position: absolute;
-  top: 260px; 
-  left: 40px;
-  max-width: 360px;  }
-
-  .hero-main-title {
-    font-size: 56px;
-    font-weight: 600;
-    margin: 0 0 16px 0;
-    color: #000000 !important;
-    line-height: 1.0;
-    letter-spacing: -1.5px;
-  }
-
-  .hero-description {
-    font-size: 12px;
-    color: #222222 !important;
-    line-height: 1.45;
-    margin-bottom: 28px;
-    max-width: 320px;
-  }
-
-  .black-btn-animated {
-    background-color: #000000;
-    color: #ffffff;
-    padding: 12px 24px;
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 130px;
-    letter-spacing: 0.5px;
-  }
-
-  /* Footer */
   .banner-bottom-bar {
+    position: absolute;
+    bottom: 12px;
+    width: 100%;
     text-align: center;
-    padding: 12px 0;
     font-size: 10px;
-    letter-spacing: 0.8px;
-    color: #222222;
+    color: #222;
     text-transform: uppercase;
-    background-color: #ffffff;
   }
 </style>
 
@@ -136,68 +87,17 @@
 {
   "name": "Custom Hero Banner",
   "settings": [
-    {
-      "type": "image_picker",
-      "id": "bg_image",
-      "label": "Background Image"
-    },
-    {
-      "type": "text",
-      "id": "logo_text",
-      "label": "Brand Logo Text",
-      "default": "TISSO VISON"
-    },
-    {
-      "type": "text",
-      "id": "top_center_text",
-      "label": "Top Center Banner Text",
-      "default": "Find the ideal gift for your loved ones."
-    },
-    {
-      "type": "text",
-      "id": "yellow_btn_text",
-      "label": "Yellow Button Text",
-      "default": "CHOOSE GIFT"
-    },
-    {
-      "type": "url",
-      "id": "yellow_btn_link",
-      "label": "Yellow Button Link"
-    },
-    {
-      "type": "text",
-      "id": "main_title",
-      "label": "Main Heading Title",
-      "default": "The Gift Guide"
-    },
-    {
-      "type": "textarea",
-      "id": "description_text",
-      "label": "Description Text",
-      "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
-    },
-    {
-      "type": "text",
-      "id": "shop_btn_text",
-      "label": "Shop Button Text",
-      "default": "SHOP NOW"
-    },
-    {
-      "type": "url",
-      "id": "shop_btn_link",
-      "label": "Shop Button Link"
-    },
-    {
-      "type": "text",
-      "id": "bottom_footer_text",
-      "label": "Bottom Footer Text",
-      "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL."
-    }
+    { "type": "image_picker", "id": "bg_image", "label": "Background Image" },
+    { "type": "text", "id": "logo_text", "label": "Logo", "default": "TISSO VISON" },
+    { "type": "text", "id": "top_center_text", "label": "Top Text", "default": "Find the ideal gift for your loved ones." },
+    { "type": "text", "id": "yellow_btn_text", "label": "Yellow Btn", "default": "CHOOSE GIFT" },
+    { "type": "url", "id": "yellow_btn_link", "label": "Yellow Link" },
+    { "type": "text", "id": "main_title", "label": "Title", "default": "The Gift Guide" },
+    { "type": "textarea", "id": "description_text", "label": "Desc", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
+    { "type": "text", "id": "shop_btn_text", "label": "Shop Btn", "default": "SHOP NOW" },
+    { "type": "url", "id": "shop_btn_link", "label": "Shop Link" },
+    { "type": "text", "id": "bottom_footer_text", "label": "Footer Text", "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL." }
   ],
-  "presets": [
-    {
-      "name": "Custom Hero Banner"
-    }
-  ]
+  "presets": [{ "name": "Custom Hero Banner" }]
 }
 {% endschema %}
