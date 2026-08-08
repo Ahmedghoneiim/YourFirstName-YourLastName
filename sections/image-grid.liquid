@@ -1,0 +1,140 @@
+<div class="custom-image-grid-section">
+  <div class="grid-container">
+    {% for block in section.blocks %}
+      <div class="grid-item" {{ block.shopify_attributes }}>
+        <a href="{{ block.settings.link | default: '#' }}" class="grid-item-link">
+          <div class="grid-image-wrapper">
+            {% if block.settings.image != blank %}
+              <img 
+                src="{{ block.settings.image | image_url: width: 800 }}" 
+                alt="{{ block.settings.title | escape }}"
+                loading="lazy"
+                width="800"
+                height="800"
+              >
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          </div>
+          {% if block.settings.title != blank %}
+            <div class="grid-item-overlay">
+              <span class="grid-item-title">{{ block.settings.title }}</span>
+            </div>
+          {% endif %}
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .custom-image-grid-section {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .grid-item {
+    position: relative;
+    overflow: hidden;
+    background-color: #f4f4f4;
+  }
+  .grid-item-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  .grid-image-wrapper {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+  }
+  .grid-image-wrapper img,
+  .grid-image-wrapper .placeholder-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .grid-item:hover img {
+    transform: scale(1.03);
+  }
+  .grid-item-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.6));
+    color: #ffffff;
+    text-align: center;
+  }
+  .grid-item-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  @media screen and (max-width: 768px) {
+    .grid-container {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+  }
+  @media screen and (max-width: 480px) {
+    .grid-container {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom Image Grid",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "image_card",
+      "name": "Grid Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title / Label",
+          "default": "Shop Item"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Image Grid",
+      "blocks": [
+        { "type": "image_card" },
+        { "type": "image_card" },
+        { "type": "image_card" },
+        { "type": "image_card" },
+        { "type": "image_card" },
+        { "type": "image_card" }
+      ]
+    }
+  ]
+}
+{% endschema %}
