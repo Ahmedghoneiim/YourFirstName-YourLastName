@@ -88,59 +88,58 @@
     },
     "image_grid_86A7T9": {
       "type": "image-grid",
+      "name": "Custom Image Grid",
+      "settings": {}
+    },
+    "image_grid_YnkgcA": {
+      "type": "image-grid",
       "blocks": {
-        "image_card_am9MMh": {
-          "type": "image_card",
+        "product_block_khHgQj": {
+          "type": "product_block",
           "settings": {
-            "title": "Shop Item",
-            "link": ""
+            "product": "black-leather-bag"
           }
         },
-        "image_card_Y7jiGz": {
-          "type": "image_card",
+        "product_block_Di8zDy": {
+          "type": "product_block",
           "settings": {
-            "title": "Shop Item",
-            "link": ""
+            "product": "blue-silk-tuxedo"
           }
         },
-        "image_card_CREKXc": {
-          "type": "image_card",
+        "product_block_tNPYbT": {
+          "type": "product_block",
           "settings": {
-            "title": "Shop Item",
-            "link": ""
+            "product": "chequered-red-shirt"
           }
         },
-        "image_card_XzX9hh": {
-          "type": "image_card",
+        "product_block_BhrtyP": {
+          "type": "product_block",
           "settings": {
-            "title": "Shop Item",
-            "link": ""
+            "product": "classic-leather-jacket"
           }
         },
-        "image_card_hUDYVd": {
-          "type": "image_card",
+        "product_block_H6nGaT": {
+          "type": "product_block",
           "settings": {
-            "title": "Shop Item",
-            "link": ""
+            "product": "classic-varsity-top"
           }
         },
-        "image_card_tKxhGp": {
-          "type": "image_card",
+        "product_block_GtN6Br": {
+          "type": "product_block",
           "settings": {
-            "title": "Shop Item",
-            "link": ""
+            "product": "dark-denim-top"
           }
         }
       },
       "block_order": [
-        "image_card_am9MMh",
-        "image_card_Y7jiGz",
-        "image_card_CREKXc",
-        "image_card_XzX9hh",
-        "image_card_hUDYVd",
-        "image_card_tKxhGp"
+        "product_block_khHgQj",
+        "product_block_Di8zDy",
+        "product_block_tNPYbT",
+        "product_block_BhrtyP",
+        "product_block_H6nGaT",
+        "product_block_GtN6Br"
       ],
-      "name": "Custom Image Grid",
+      "name": "Custom Product Grid",
       "settings": {}
     }
   },
@@ -148,6 +147,7 @@
     "image_banner",
     "featured_collection",
     "hero_gift_guide_4BmGf8",
-    "image_grid_86A7T9"
+    "image_grid_86A7T9",
+    "image_grid_YnkgcA"
   ]
 }
