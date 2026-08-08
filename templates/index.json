@@ -91,57 +91,6 @@
       "name": "Custom Image Grid",
       "settings": {}
     },
-    "image_grid_NjqeNz": {
-      "type": "image-grid",
-      "blocks": {
-        "product_block_c4AfJk": {
-          "type": "product_block",
-          "settings": {
-            "product": "black-leather-bag"
-          }
-        },
-        "product_block_h98cK7": {
-          "type": "product_block",
-          "settings": {
-            "product": "blue-silk-tuxedo"
-          }
-        },
-        "product_block_BTzr3z": {
-          "type": "product_block",
-          "settings": {
-            "product": "chequered-red-shirt"
-          }
-        },
-        "product_block_arDyz4": {
-          "type": "product_block",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_block_ag94qa": {
-          "type": "product_block",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_block_DbW4iG": {
-          "type": "product_block",
-          "settings": {
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_block_c4AfJk",
-        "product_block_h98cK7",
-        "product_block_BTzr3z",
-        "product_block_arDyz4",
-        "product_block_ag94qa",
-        "product_block_DbW4iG"
-      ],
-      "name": "Custom Product Grid",
-      "settings": {}
-    },
     "image_grid_tezJU7": {
       "type": "image-grid",
       "blocks": {
@@ -199,7 +148,6 @@
     "featured_collection",
     "hero_gift_guide_4BmGf8",
     "image_grid_86A7T9",
-    "image_grid_NjqeNz",
     "image_grid_tezJU7"
   ]
 }
