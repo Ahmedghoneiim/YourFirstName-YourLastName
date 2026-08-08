@@ -28,6 +28,8 @@
   </div>
 </div>
 
+{% assign bonus_jacket = section.settings.bonus_product %}
+
 <style>
   .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: inherit; }
   .section-title { font-size: 24px; margin-bottom: 20px; font-weight: normal; }
@@ -95,6 +97,9 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    const bonusJacketVariantId = "{% if bonus_jacket != blank %}{{ bonus_jacket.selected_or_first_available_variant.id }}{% endif %}";
+    const bonusJacketHandle = "{% if bonus_jacket != blank %}{{ bonus_jacket.handle }}{% endif %}";
+
     const modal = document.getElementById('quick-view-modal');
     const modalContent = document.getElementById('qv-modal-content');
     const closeBtn = document.querySelector('.qv-close-btn');
@@ -205,17 +210,26 @@
         let itemsToAdd = [{ id: matchedVariant.id, quantity: 1 }];
 
         if (isBlack && isMedium) {
-          fetch('/products/soft-winter-jacket.js')
-            .then(res => res.json())
-            .then(jacket => {
-              if (jacket && jacket.variants && jacket.variants[0]) {
-                itemsToAdd.push({ id: jacket.variants[0].id, quantity: 1 });
-              }
-              postCartItems(itemsToAdd);
-            })
-            .catch(() => {
-              postCartItems(itemsToAdd);
-            });
+          if (bonusJacketVariantId) {
+            itemsToAdd.push({ id: parseInt(bonusJacketVariantId), quantity: 1 });
+            postCartItems(itemsToAdd);
+          } else {
+            // Fallback search if setting is empty
+            fetch('/search.js?q=Soft+Winter+Jacket&type=product')
+              .then(r => r.json())
+              .then(searchData => {
+                 if (searchData.results && searchData.results.length > 0) {
+                    fetch('/products/' + searchData.results[0].handle + '.js')
+                      .then(res => res.json())
+                      .then(j => {
+                        itemsToAdd.push({ id: j.variants[0].id, quantity: 1 });
+                        postCartItems(itemsToAdd);
+                      });
+                 } else {
+                    postCartItems(itemsToAdd);
+                 }
+              }).catch(() => postCartItems(itemsToAdd));
+          }
         } else {
           postCartItems(itemsToAdd);
         }
@@ -240,7 +254,13 @@
 {% schema %}
 {
   "name": "Custom Product Grid",
-  "settings": [],
+  "settings": [
+    {
+      "type": "product",
+      "id": "bonus_product",
+      "label": "Auto-Add Bonus Product (Soft Winter Jacket)"
+    }
+  ],
   "blocks": [
     {
       "type": "product_block",
