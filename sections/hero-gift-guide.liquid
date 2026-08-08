@@ -1,19 +1,23 @@
 <div class="hero-gift-guide-wrapper">
   <div class="hero-content">
-    <h1 class="hero-title">{{ section.settings.heading | default: 'The Gift Guide' }}</h1>
-    <p class="hero-subtitle">{{ section.settings.subheading | default: 'Discover our top selection of products...' }}</p>
-    {% if section.settings.button_label != blank %}
-      <a href="{{ section.settings.button_link }}" class="hero-btn">{{ section.settings.button_label }}</a>
-    {% endif %}
+    <h1 class="hero-title">{{ section.settings.heading }}</h1>
+    <p class="hero-subtitle">{{ section.settings.subheading }}</p>
+    {%- if section.settings.button_label != blank -%}
+      <a href="{{ section.settings.button_link }}" class="hero-btn">
+        {{ section.settings.button_label }}
+      </a>
+    {%- endif -%}
   </div>
 </div>
 
 <style>
   .hero-gift-guide-wrapper {
     width: 100%;
-    min-height: 400px;
+    min-height: 420px;
     background-color: #f8f8f8;
-    background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');
+    {% if section.settings.bg_image != blank %}
+      background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');
+    {% endif %}
     background-size: cover;
     background-position: center;
     display: flex;
@@ -27,82 +31,23 @@
   }
   .hero-title {
     font-size: 42px;
-    font-weight: bold;
+    font-weight: 700;
     margin-bottom: 15px;
-    color: #000;
+    color: #000000;
   }
   .hero-subtitle {
     font-size: 16px;
     margin-bottom: 25px;
-    color: #333;
+    color: #333333;
+    line-height: 1.5;
   }
   .hero-btn {
     display: inline-block;
     padding: 12px 30px;
-    background-color: #000;
-    color: #fff;
+    background-color: #000000;
+    color: #ffffff;
     text-decoration: none;
-    font-weight: bold;
-    border-radius: 2px;
-  }
-</style>
-
-{% schema %}
-{
-  "name": "Hero Gift Guide",
-  "settings": [
-    {
-      "type": "image_picker",
-      "id": "bg_image",
-      "label": "Background Image"
-    },
-    {
-      "type": "text",
-      "id": "heading<div class="hero-gift-guide-wrapper">
-  <div class="hero-content">
-    <h1 class="hero-title">{{ section.settings.heading | default: 'The Gift Guide' }}</h1>
-    <p class="hero-subtitle">{{ section.settings.subheading | default: 'Discover our top selection of products...' }}</p>
-    {% if section.settings.button_label != blank %}
-      <a href="{{ section.settings.button_link }}" class="hero-btn">{{ section.settings.button_label }}</a>
-    {% endif %}
-  </div>
-</div>
-
-<style>
-  .hero-gift-guide-wrapper {
-    width: 100%;
-    min-height: 400px;
-    background-color: #f8f8f8;
-    background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 20px;
-  }
-  .hero-content {
-    max-width: 600px;
-  }
-  .hero-title {
-    font-size: 42px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #000;
-  }
-  .hero-subtitle {
-    font-size: 16px;
-    margin-bottom: 25px;
-    color: #333;
-  }
-  .hero-btn {
-    display: inline-block;
-    padding: 12px 30px;
-    background-color: #000;
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
     border-radius: 2px;
   }
 </style>
@@ -126,35 +71,7 @@
       "type": "textarea",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Discover our top selection for you."
-    },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "Button Label",
-      "default": "SHOP NOW"
-    },
-    {
-      "type": "url",
-      "id": "button_link",
-      "label": "Button Link"
-    }
-  ],
-  "presets": [
-    {
-      "name": "Hero Gift Guide"
-    }
-  ]
-}
-{% endschema %}",
-      "label": "Heading",
-      "default": "The Gift Guide"
-    },
-    {
-      "type": "textarea",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "Discover our top selection for you."
+      "default": "Discover our top selection of products for you."
     },
     {
       "type": "text",
