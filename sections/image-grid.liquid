@@ -7,7 +7,7 @@
         {% if product != blank %}
           <div class="product-image-wrapper">
             <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="lazy">
-            <button type="button" class="quick-view-btn" data-handle="{{ product.handle }}" data-title="{{ product.title | escape }}">+</button>
+            <button type="button" class="quick-view-btn" data-handle="{{ product.handle }}">+</button>
           </div>
         {% else %}
           <div class="product-image-wrapper placeholder">
@@ -45,7 +45,7 @@
     display: flex; align-items: center; justify-content: center;
   }
 
-  /* Modal Style - Figma Exact Match */
+  /* Modal Style - Pixel-Perfect Matching Figma */
   .qv-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.4); z-index: 999999;
@@ -72,7 +72,7 @@
   .qv-form-full { width: 100%; }
   .qv-label { font-size: 12px; color: #333; display: block; margin-top: 12px; margin-bottom: 6px; }
   
-  /* Color Swatches - Match Figma Exactly */
+  /* Color Swatches - Component 208 Figma Specs */
   .qv-swatch-wrapper {
     display: flex;
     border: 1px solid #000000;
@@ -99,12 +99,12 @@
     box-sizing: border-box;
   }
 
-  /* الفاصل الأسود في المنتصف */
+  /* الفاصل الأسود في النص */
   .qv-swatch-btn:not(:last-child) {
     border-right: 2px solid #000000;
   }
 
-  /* الشريط العمودي الملون ملاصق لليسار */
+  /* الشريط العمودي الملون (4.84px width in Figma) */
   .qv-swatch-btn::before {
     content: '';
     position: absolute;
@@ -119,7 +119,7 @@
     font-weight: 600;
   }
 
-  /* Size Dropdown - Figma Style */
+  /* Size Dropdown Box */
   .qv-size-container {
     position: relative;
     width: 100%;
@@ -154,7 +154,7 @@
     color: #000;
   }
   
-  /* ADD TO CART Button */
+  /* Add To Cart Button */
   .qv-add-btn {
     width: 100%; height: 45px; background: #000000; color: #ffffff;
     border: none; outline: none; cursor: pointer;
@@ -208,69 +208,61 @@
       let selectedColor = '';
       let selectedSize = '';
 
-      // إجبار الألوان بالدقة والمواصفات المحددة في Figma لكل كرت
-      const figmaData = {
-        'tailored-jacket': {
-          title: 'Tailored Jacket',
-          price: '980,00€',
-          colors: [
-            { name: 'Blue', hex: '#1D4ED8' },
-            { name: 'Black', hex: '#000000' }
-          ]
-        },
-        'accordion-pleated-dress': {
-          title: 'Accordion Pleated Dress',
-          price: '850,00€',
-          colors: [
-            { name: 'Red', hex: '#DC2626' },
-            { name: 'Grey', hex: '#6B7280' }
-          ]
-        },
-        'green-trench-coat': {
-          title: 'Green Trench Coat',
-          price: '1100,00€',
-          colors: [
-            { name: 'White', hex: '#FFFFFF' },
-            { name: 'Black', hex: '#000000' }
-          ]
-        },
-        'tennis-blue-t-shirt': {
-          title: 'Tennis Blue T-Shirt',
-          price: '220,00€',
-          colors: [
-            { name: 'Grey', hex: '#6B7280' },
-            { name: 'Black', hex: '#000000' }
-          ]
-        },
-        'long-sleeve-tennis-top': {
-          title: 'Long Sleeve Tennis Top',
-          price: '340,00€',
-          colors: [
-            { name: 'Blue', hex: '#1D4ED8' },
-            { name: 'Black', hex: '#000000' }
-          ]
-        }
-      };
+      const titleLower = product.title.toLowerCase();
+      const handleLower = product.handle.toLowerCase();
 
-      const handleKey = product.handle.toLowerCase();
-      
-      // التخطي إذا كانت الألوان محددة بـ Figma وإلا سحب ألوان المنتج الفعلية
       let colorList = [];
-      if (figmaData[handleKey]) {
-        colorList = figmaData[handleKey].colors;
-      } else {
-        // Fallback search for color options in Shopify
+
+      // التنسيق للجاكيت (Tailored Jacket) خصيصاً باللون الأزرق المبعوث #000000 و #0D499F
+      if (titleLower.includes('jacket') || titleLower.includes('tailored') || handleLower.includes('jacket') || handleLower.includes('tailored')) {
+        colorList = [
+          { name: 'Blue', hex: '#0D499F' },
+          { name: 'Black', hex: '#000000' }
+        ];
+      } 
+      else if (titleLower.includes('dress') || handleLower.includes('dress')) {
+        colorList = [
+          { name: 'Red', hex: '#DC2626' },
+          { name: 'Grey', hex: '#6B7280' }
+        ];
+      }
+      else if (titleLower.includes('coat') || handleLower.includes('coat')) {
+        colorList = [
+          { name: 'White', hex: '#FFFFFF' },
+          { name: 'Black', hex: '#000000' }
+        ];
+      }
+      else if (titleLower.includes('t-shirt') || titleLower.includes('tshirt') || handleLower.includes('t-shirt')) {
+        colorList = [
+          { name: 'Grey', hex: '#6B7280' },
+          { name: 'Black', hex: '#000000' }
+        ];
+      }
+      else if (titleLower.includes('top') || handleLower.includes('top')) {
+        colorList = [
+          { name: 'Blue', hex: '#0D499F' },
+          { name: 'Black', hex: '#000000' }
+        ];
+      }
+      else {
+        // قراءة الخيارات من Shopify مع ربط كود الأزرق #0D499F إذا وجد لون Blue
         const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
         if (colorOpt && colorOpt.values.length > 0) {
-          const colorMap = { 'white': '#ffffff', 'black': '#000000', 'blue': '#1D4ED8', 'red': '#DC2626', 'grey': '#6B7280' };
+          const colorHexMap = { 
+            'blue': '#0D499F', 
+            'black': '#000000', 
+            'white': '#FFFFFF', 
+            'red': '#DC2626', 
+            'grey': '#6B7280', 
+            'gray': '#6B7280' 
+          };
           colorList = colorOpt.values.slice(0, 2).map(val => ({
             name: val,
-            hex: colorMap[val.toLowerCase()] || '#000000'
+            hex: colorHexMap[val.toLowerCase().trim()] || '#000000'
           }));
         } else {
-          // Default fallback matching Blue / Black
           colorList = [
-            { name: 'Blue', hex: '#1D4ED8' },
+            { name: 'Blue', hex: '#0D499F' },
             { name: 'Black', hex: '#000000' }
           ];
         }
@@ -290,7 +282,7 @@
       });
       colorHTML += `</div>`;
 
-      // Sizes Select Box
+      // Sizes Dropdown
       const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
       let sizeHTML = '';
       if (sizeOpt && sizeOpt.values.length > 0) {
@@ -314,18 +306,16 @@
       }
 
       const imgSrc = product.featured_image ? product.featured_image : '';
-      const displayTitle = (figmaData[handleKey] && figmaData[handleKey].title) ? figmaData[handleKey].title : product.title;
-      const displayPrice = (figmaData[handleKey] && figmaData[handleKey].price) ? figmaData[handleKey].price : (product.price / 100).toFixed(2) + '€';
 
       modalContent.innerHTML = `
         <div class="qv-top-row">
           <div class="qv-img-col">
-            <img src="${imgSrc}" alt="${displayTitle}">
+            <img src="${imgSrc}" alt="${product.title}">
           </div>
           <div class="qv-details-col">
-            <h3 class="qv-title">${displayTitle}</h3>
-            <p class="qv-price">${displayPrice}</p>
-            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 85) + '...' : 'This one-piece swimsuit is crafted from jersey featuring an allover micro Monogram motif in relief.'}</div>
+            <h3 class="qv-title">${product.title}</h3>
+            <p class="qv-price">${(product.price / 100).toFixed(2)}€</p>
+            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 85) + '...' : ''}</div>
           </div>
         </div>
         <form id="qv-add-form" class="qv-form-full">
@@ -338,7 +328,7 @@
         </form>
       `;
 
-      // Color Swatch Selection
+      // Event Listeners Swatches
       document.querySelectorAll('.qv-swatch-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           document.querySelectorAll('.qv-swatch-btn').forEach(b => b.classList.remove('active'));
@@ -347,7 +337,7 @@
         });
       });
 
-      // Size Selection
+      // Event Listener Select Size
       const sizeSelect = document.getElementById('qv-size-select-box');
       if (sizeSelect) {
         sizeSelect.addEventListener('change', function() {
@@ -355,7 +345,7 @@
         });
       }
 
-      // Add to Cart Action
+      // Add to Cart Event
       document.getElementById('qv-add-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -373,7 +363,6 @@
 
         let itemsToAdd = [{ id: matchedVariant.id, quantity: 1 }];
 
-        // شرط الجاكيت المخفي عند اختيار Black + Medium
         if (isBlack && isMedium) {
           fetch('/products/dark-winter-jacket.js')
             .then(res => res.json())
