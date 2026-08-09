@@ -91,11 +91,46 @@
   }
   
   /* Add To Cart Button - Full Width */
+  /* Add To Cart Button - Exact Figma Style */
   .qv-add-btn {
-    width: 100%; padding: 11px 15px; background: #000; color: #fff;
-    border: none; cursor: pointer; font-weight: bold; font-size: 11px;
-    display: flex; justify-content: space-between; align-items: center;
-    letter-spacing: 0.5px; box-sizing: border-box;
+    width: 271px;
+    height: 45px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin: 15px auto 0 auto;
+    
+    /* Typography */
+    font-family: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20.48px;
+    letter-spacing: 0px;
+    text-transform: uppercase;
+    text-align: center;
+
+    /* Flex Alignment */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    transition: opacity 0.2s ease;
+  }
+
+  .qv-add-btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Arrow Typography matching Figma */
+  .qv-add-btn .btn-arrow {
+    font-size: 22px !important;
+    line-height: 1;
+    display: inline-block;
+    font-weight: 300;
+    margin-left: 8px;
   }
 
   @media (max-width: 480px) {
@@ -178,7 +213,7 @@
           ${sizeHTML}
           <button type="submit" class="qv-add-btn">
             <span>ADD TO CART</span>
-            <span>&rarr;</span>
+            <span class="btn-arrow">&rarr;</span>
           </button>
         </form>
       `;
