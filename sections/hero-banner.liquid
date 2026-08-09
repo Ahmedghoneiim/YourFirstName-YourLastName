@@ -15,11 +15,21 @@
   </div>
 
   <div class="figma-group-hero">
+    <!-- Desktop Image -->
     <img 
       src="{{ section.settings.bg_image | image_url: width: 3840 }}" 
-      alt="Hero Graphics" 
-      class="hero-absolute-img"
+      alt="Hero Desktop Graphics" 
+      class="hero-absolute-img desktop-only-img"
     >
+
+    <!-- Mobile Image (Fallback to desktop image if mobile image is not uploaded) -->
+    {% assign mobile_img = section.settings.bg_image_mobile | default: section.settings.bg_image %}
+    <img 
+      src="{{ mobile_img | image_url: width: 800 }}" 
+      alt="Hero Mobile Graphics" 
+      class="hero-absolute-img mobile-only-img"
+    >
+
     <div class="figma-content-locked">
       <h1 class="hero-main-title">{{ section.settings.main_title }}</h1>
       <p class="hero-description">{{ section.settings.description_text }}</p>
@@ -119,6 +129,14 @@
     z-index: 1;
   }
 
+  /* Visibility Controls for Dual Images */
+  .mobile-only-img {
+    display: none;
+  }
+  .desktop-only-img {
+    display: block;
+  }
+
   .figma-content-locked {
     position: absolute;
     top: 54%; 
@@ -177,7 +195,24 @@
     z-index: 10;
   }
 
+  /* Mobile Custom Image Settings */
   @media screen and (max-width: 768px) {
+    .desktop-only-img {
+      display: none !important;
+    }
+
+    .mobile-only-img {
+      display: block !important;
+      position: absolute;
+      width: 100%; /* تقدر تكبر النسبة دي زي ما تحب لتعديل أبعاد صورة الموبايل */
+      max-width: none !important;
+      height: auto;
+      top: 37.29%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
     .figma-frame-1956 {
       padding: 12px 20px;
       height: 50px;
@@ -205,17 +240,6 @@
       padding-top: 0 !important;
       height: 520px;
       position: relative;
-    }
-
-    .hero-absolute-img {
-      position: absolute;
-      width: 180%;
-      max-width: none !important;
-      height: auto;
-      top: 37.29%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
     }
 
     .figma-content-locked {
@@ -272,7 +296,8 @@
 {
   "name": "Custom Hero Banner",
   "settings": [
-    { "type": "image_picker", "id": "bg_image", "label": "Background Image" },
+    { "type": "image_picker", "id": "bg_image", "label": "Desktop Image" },
+    { "type": "image_picker", "id": "bg_image_mobile", "label": "Mobile Image (Optional)" },
     { "type": "text", "id": "logo_text", "label": "Logo", "default": "TISSO VISON" },
     { "type": "text", "id": "top_center_text", "label": "Top Text", "default": "Find the ideal gift for your loved ones." },
     { "type": "text", "id": "yellow_btn_text", "label": "Yellow Btn", "default": "CHOOSE GIFT" },
