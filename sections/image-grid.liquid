@@ -29,7 +29,8 @@
 </div>
 
 <style>
-  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: sans-serif; }
+  /* Layout & Grid Styles */
+  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: 'Jost', -apple-system, sans-serif; }
   .section-title { font-size: 26px; margin-bottom: 25px; font-weight: normal; color: #111; }
   .product-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .grid-product-card { position: relative; }
@@ -44,7 +45,7 @@
     display: flex; align-items: center; justify-content: center;
   }
 
-  /* Modal Base Styling */
+  /* Modal Base Style */
   .qv-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.4); z-index: 999999;
@@ -59,7 +60,7 @@
     border: none; font-size: 18px; cursor: pointer; color: #333; z-index: 10;
   }
 
-  /* Top Section: Image + Info side by side */
+  /* Top Section */
   .qv-top-row { display: flex; gap: 15px; margin-bottom: 12px; }
   .qv-img-col { width: 45%; flex-shrink: 0; }
   .qv-img-col img { width: 100%; height: auto; display: block; object-fit: cover; aspect-ratio: 1/1; }
@@ -69,11 +70,11 @@
   .qv-price { font-size: 13px; color: #222; margin-bottom: 8px; font-weight: bold; }
   .qv-desc { font-size: 10px; color: #666; line-height: 1.35; margin: 0; }
 
-  /* Full Width Form Elements below top row */
+  /* Form & Option Styles */
   .qv-form-full { width: 100%; }
   .qv-label { font-size: 11px; text-transform: capitalize; color: #555; display: block; margin-top: 10px; margin-bottom: 6px; }
   
-  /* Color Swatches Container - Figma Pixel-Perfect Dual Slot */
+  /* Color Swatches - Identical to Figma Cards */
   .qv-swatch-wrapper {
     display: flex;
     border: 1px solid #000000;
@@ -85,27 +86,29 @@
 
   .qv-swatch-btn {
     flex: 1;
-    height: 42px;
+    height: 40px;
     background: #ffffff;
     border: none;
-    font-family: 'Jost', -apple-system, sans-serif;
-    font-size: 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
     color: #000000;
     cursor: pointer;
     text-align: left;
-    padding-left: 16px;
+    padding-left: 14px;
     position: relative;
     display: flex;
     align-items: center;
     box-sizing: border-box;
+    transition: all 0.2s ease;
   }
 
-  /* الفاصل الأسود بين الخيارين بالضبط زي الصورة */
+  /* الفاصل الأسود العريض بين اللونين بالضبط زي الصورة */
   .qv-swatch-btn:not(:last-child) {
-    border-right: 3px solid #000000;  
+    border-right: 2px solid #000000;
   }
 
-  /* الشريط الملون الملازق على الشمال */
+  /* الشريط العمودي الملون الملازق على الشمال */
   .qv-swatch-btn::before {
     content: '';
     position: absolute;
@@ -115,31 +118,23 @@
     width: 4px;
     background-color: var(--swatch-color, #000000);
   }
-  .qv-swatch-btn[data-value="Blue"] {
-    --swatch-color: #0F52BA; /* الأزرق الملكي نفس الصورة */
-  }
-  .qv-swatch-btn[data-value="Black"] {
-    --swatch-color: #000000; /* الأسود */
-  }
 
   .qv-swatch-btn.active {
-    outline: 1.5px solid #000000;
-    outline-offset: -1.5px;
-    font-weight: 500;
+    font-weight: 700;
   }
 
-  /* Size Dropdown - Full Width */
+  /* Size Dropdown */
   .qv-size-select {
     width: 100%; padding: 8px 10px; border: 1px solid #000000;
     font-size: 11px; background: #fff; margin-bottom: 15px; cursor: pointer;
     border-radius: 0; outline: none; box-sizing: border-box;
   }
   
-  /* Add To Cart Button */
+  /* Add To Cart Button - Exact Figma Spec */
   .qv-add-btn {
     width: 100%; height: 45px; background: #000000; color: #ffffff;
     border: none; outline: none; cursor: pointer;
-    font-family: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Jost', sans-serif;
     font-weight: 400; font-size: 16px; line-height: 20.48px;
     text-transform: uppercase; text-align: center;
     display: flex; justify-content: center; align-items: center; gap: 10px;
@@ -192,7 +187,7 @@
       const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
       const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
 
-      // خريطة الألوان للتحويل المباشر
+      // Map للألوان لترجمتها لـ Hex
       const colorMap = {
         'white': '#FFFFFF',
         'black': '#000000',
@@ -207,7 +202,7 @@
 
       let colorHTML = '';
       if (colorOpt) {
-        // حصر الألوان لعدد لونين فقط كما هو مطلوب في تصميم Figma
+        // حصر الألوان لـ 2 فقط مطابقة لـ Figma
         const availableColors = colorOpt.values.slice(0, 2);
         selectedColor = availableColors[0];
 
@@ -261,7 +256,7 @@
         </form>
       `;
 
-      // Swatch Click Logic
+      // Swatch Logic
       document.querySelectorAll('.qv-swatch-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           document.querySelectorAll('.qv-swatch-btn').forEach(b => b.classList.remove('active'));
@@ -270,7 +265,7 @@
         });
       });
 
-      // Size Dropdown Logic
+      // Size Select Logic
       const sizeSelect = document.getElementById('qv-size-select-box');
       if (sizeSelect) {
         sizeSelect.addEventListener('change', function() {
@@ -278,7 +273,7 @@
         });
       }
 
-      // Submit Form Logic (مع الحفاظ الكامل على الجاكيت المخفي والـ Cart Logic)
+      // Add To Cart Submit Logic (شغال مع إضافة الجاكيت المخفي)
       document.getElementById('qv-add-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -325,15 +320,6 @@
       });
     }
   });
-  <label class="qv-label">Color</label>
-<div class="qv-swatch-wrapper">
-  <button type="button" class="qv-swatch-btn active" data-value="Blue">
-    Blue
-  </button>
-  <button type="button" class="qv-swatch-btn" data-value="Black">
-    Black
-  </button>
-</div>
 </script>
 
 {% schema %}
