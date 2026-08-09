@@ -80,6 +80,7 @@
       "type": "hero-banner",
       "name": "Custom Hero Banner",
       "settings": {
+        "bg_image": "shopify://shop_images/Untitled_fbd2649f-15a4-46fe-9124-017efa9506de.png",
         "logo_text": "TISSO VISON",
         "top_center_text": "Find the ideal gift for your loved ones.",
         "yellow_btn_text": "CHOOSE GIFT",
