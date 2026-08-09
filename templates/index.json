@@ -105,54 +105,60 @@
     },
     "image_grid_tezJU7": {
       "type": "image-grid",
+      "name": "Custom Product Grid",
+      "settings": {
+        "heading": "Shop the Collection",
+        "columns_desktop": 4,
+        "columns_mobile": 2
+      }
+    },
+    "image_grid_QxcFpz": {
+      "type": "image-grid",
       "blocks": {
-        "product_block_eB6Xni": {
-          "type": "product_block",
+        "product_NVL3L4": {
+          "type": "product",
           "settings": {
             "product": "black-leather-bag"
           }
         },
-        "product_block_NUUp6N": {
-          "type": "product_block",
+        "product_q3tiY9": {
+          "type": "product",
           "settings": {
             "product": "blue-silk-tuxedo"
           }
         },
-        "product_block_rNzA6x": {
-          "type": "product_block",
+        "product_DNw3mn": {
+          "type": "product",
           "settings": {
             "product": "chequered-red-shirt"
           }
         },
-        "product_block_APcct6": {
-          "type": "product_block",
+        "product_cpKGA9": {
+          "type": "product",
           "settings": {
             "product": "classic-leather-jacket"
           }
         },
-        "product_block_BjTdAB": {
-          "type": "product_block",
+        "product_6MGHta": {
+          "type": "product",
           "settings": {
-            "product": "classic-varsity-top"
-          }
-        },
-        "product_block_JCgxwi": {
-          "type": "product_block",
-          "settings": {
-            "product": "dark-denim-top"
+            "product": ""
           }
         }
       },
       "block_order": [
-        "product_block_eB6Xni",
-        "product_block_NUUp6N",
-        "product_block_rNzA6x",
-        "product_block_APcct6",
-        "product_block_BjTdAB",
-        "product_block_JCgxwi"
+        "product_NVL3L4",
+        "product_q3tiY9",
+        "product_DNw3mn",
+        "product_cpKGA9",
+        "product_6MGHta"
       ],
-      "name": "Custom Product Grid",
-      "settings": {}
+      "name": "Image Grid (Quick View)",
+      "settings": {
+        "heading": "Shop the Collection",
+        "columns_desktop": 4,
+        "columns_mobile": 2
+      }
     }
   },
   "order": [
@@ -160,6 +166,7 @@
     "featured_collection",
     "hero_banner_NiUPnY",
     "hero_gift_guide_4BmGf8",
-    "image_grid_tezJU7"
+    "image_grid_tezJU7",
+    "image_grid_QxcFpz"
   ]
 }
