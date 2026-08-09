@@ -29,13 +29,13 @@
 </div>
 
 <style>
-  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: 'Jost', sans-serif; }
+  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: sans-serif; }
   .section-title { font-size: 26px; margin-bottom: 25px; font-weight: normal; color: #111; }
   .product-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .grid-product-card { position: relative; }
   .product-image-wrapper { position: relative; width: 100%; padding-top: 100%; overflow: hidden; }
   .product-image-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-  
+
   .quick-view-btn {
     position: absolute; bottom: 15px; right: 15px;
     width: 32px; height: 32px; border-radius: 50%;
@@ -44,123 +44,63 @@
     display: flex; align-items: center; justify-content: center;
   }
 
+  /* Modal Base Styling */
   .qv-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.4); z-index: 999999;
     display: flex; align-items: center; justify-content: center;
   }
   .qv-modal-card {
-    background: #fff; width: 90%; max-width: 350px; padding: 20px;
+    background: #fff; width: 90%; max-width: 360px; padding: 20px;
     position: relative; border-radius: 0px; box-shadow: 0 4px 25px rgba(0,0,0,0.15);
   }
   .qv-close-btn {
     position: absolute; top: 10px; right: 12px; background: none;
-    border: none; font-size: 20px; cursor: pointer; color: #333; z-index: 10;
+    border: none; font-size: 18px; cursor: pointer; color: #333; z-index: 10;
   }
 
+  /* Top Section: Image + Info side by side */
   .qv-top-row { display: flex; gap: 15px; margin-bottom: 12px; }
-  .qv-img-col { width: 42%; flex-shrink: 0; }
+  .qv-img-col { width: 45%; flex-shrink: 0; }
   .qv-img-col img { width: 100%; height: auto; display: block; object-fit: cover; aspect-ratio: 1/1; }
-  .qv-details-col { width: 58%; display: flex; flex-direction: column; justify-content: flex-start; }
-  
-  .qv-title { font-size: 15px; margin: 0 0 6px 0; font-weight: 400; color: #222; }
-  .qv-price { font-size: 14px; color: #222; margin-bottom: 8px; font-weight: 500; }
-  .qv-desc { font-size: 11px; color: #555; line-height: 1.35; margin: 0; }
+  .qv-details-col { width: 55%; display: flex; flex-direction: column; justify-content: flex-start; }
 
+  .qv-title { font-size: 14px; margin: 0 0 6px 0; font-weight: normal; color: #222; }
+  .qv-price { font-size: 13px; color: #222; margin-bottom: 8px; font-weight: bold; }
+  .qv-desc { font-size: 10px; color: #666; line-height: 1.35; margin: 0; }
+
+  /* Full Width Form Elements below top row */
   .qv-form-full { width: 100%; }
-  .qv-label { font-size: 12px; color: #333; display: block; margin-top: 12px; margin-bottom: 6px; }
-  
-  .qv-swatch-wrapper {
-    display: flex;
-    border: 1px solid #000000;
-    width: 100%;
-    margin-bottom: 12px;
-    box-sizing: border-box;
-    background: #ffffff;
-  }
+  .qv-label { font-size: 11px; text-transform: capitalize; color: #555; display: block; margin-top: 10px; margin-bottom: 6px; }
 
+  /* Color Swatches - Full Width Box */
+  .qv-swatch-wrapper { display: flex; border: 1px solid #000000; width: 100%; margin-bottom: 10px; }
   .qv-swatch-btn {
-    flex: 1;
-    height: 42px;
-    background: #ffffff;
-    border: none;
-    font-family: 'Jost', sans-serif;
-    font-size: 14px;
-    color: #000000;
-    cursor: pointer;
-    text-align: left;
-    padding-left: 16px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
+    flex: 1; min-width: 0; padding: 8px 6px 8px 11px; background: #fff; border: none;
+    font-size: 11px; cursor: pointer; text-align: center; color: #111;
+    border-right: 2px solid #000000; transition: all 0.2s ease; position: relative;
+    display: flex; align-items: center; justify-content: center; box-sizing: border-box;
   }
-
-  .qv-swatch-btn:not(:last-child) {
-    border-right: 2px solid #000000;
-  }
-
+  .qv-swatch-btn:last-child { border-right: none; }
+  .qv-swatch-btn.active { background: #000; color: #fff; font-weight: bold; }
   .qv-swatch-btn::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 5px;
+    content: ""; position: absolute; top: 0; left: 0; width: 5px; height: 100%;
     background-color: var(--swatch-color, #000000);
   }
 
-  .qv-swatch-btn.active {
-    font-weight: 600;
-  }
-
-  .qv-size-container {
-    position: relative;
-    width: 100%;
-    margin-bottom: 18px;
-  }
-
+  /* Size Dropdown - Full Width */
   .qv-size-select {
-    width: 100%;
-    height: 42px;
-    padding: 0 35px 0 12px;
-    border: 1px solid #000000;
-    font-size: 13px;
-    font-family: 'Jost', sans-serif;
-    background: #fff;
-    cursor: pointer;
-    border-radius: 0;
-    outline: none;
-    box-sizing: border-box;
-    appearance: none;
-    -webkit-appearance: none;
+    width: 100%; padding: 8px 10px; border: 1px solid #111;
+    font-size: 11px; background: #fff; margin-bottom: 15px; cursor: pointer;
+    border-radius: 0; outline: none; box-sizing: border-box;
   }
 
-  .qv-size-container::after {
-    content: '∨';
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    font-size: 12px;
-    font-weight: bold;
-    color: #000;
-  }
-  
+  /* Add To Cart Button - Full Width */
   .qv-add-btn {
-    width: 100%; height: 45px; background: #000000; color: #ffffff;
-    border: none; outline: none; cursor: pointer;
-    font-family: 'Jost', sans-serif;
-    font-size: 15px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    display: flex; justify-content: center; align-items: center; gap: 10px;
-  }
-
-  .qv-add-btn .btn-arrow {
-    font-size: 20px !important; line-height: 1;
-    display: inline-block; font-weight: 300; margin-left: 8px;
+    width: 100%; padding: 11px 15px; background: #000; color: #fff;
+    border: none; cursor: pointer; font-weight: bold; font-size: 11px;
+    display: flex; justify-content: space-between; align-items: center;
+    letter-spacing: 0.5px; box-sizing: border-box;
   }
 
   @media (max-width: 480px) {
@@ -181,7 +121,7 @@
       btn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         const handle = this.getAttribute('data-handle');
         if (!handle) return;
 
@@ -189,7 +129,10 @@
         modalContent.innerHTML = '<p style="text-align:center;">Loading product details...</p>';
 
         fetch('/products/' + handle + '.js')
-          .then(res => res.json())
+          .then(res => {
+            if (!res.ok) throw new Error('Product request failed');
+            return res.json();
+          })
           .then(product => renderModalData(product))
           .catch(() => {
             modalContent.innerHTML = '<p style="text-align:center; color:red;">Failed to load product.</p>';
@@ -197,89 +140,57 @@
       });
     });
 
-    function detectHexColor(valName) {
-      const v = valName.toLowerCase();
-      if (v.includes('blue')) return '#0D499F';
-      if (v.includes('black')) return '#000000';
-      if (v.includes('white')) return '#FFFFFF';
-      if (v.includes('red')) return '#DC2626';
-      if (v.includes('grey') || v.includes('gray')) return '#6B7280';
-      if (v.includes('green')) return '#15803D';
-      return '#000000';
-    }
-
     function renderModalData(product) {
-      let selectedColor = '';
+      if (!product || !Array.isArray(product.variants) || !product.variants.length) {
+        modalContent.innerHTML = '<p style="text-align:center; color:red;">Product variants are unavailable.</p>';
+        return;
+      }
+
+      const variants = product.variants;
+      const options = normalizeProductOptions(product);
+      const colorOpt = findColorOption(options);
+      const sizeOpt = findSizeOption(options, colorOpt);
+      let selectedColor = colorOpt && colorOpt.values.length ? colorOpt.values[0] : '';
       let selectedSize = '';
 
-      // البحث عن خيار اللون أياً كان اسمه في Shopify
-      let colorValues = [];
-      const colorOpt = product.options.find(o => 
-        o.name.toLowerCase().includes('color') || 
-        o.name.toLowerCase().includes('colour')
-      );
-
-      if (colorOpt && colorOpt.values.length > 0) {
-        colorValues = colorOpt.values;
-      } else {
-        // Fallback: سحب الألوان المتاحة في الـ Variants مباشرة
-        const extracted = new Set();
-        product.variants.forEach(v => {
-          v.options.forEach(optVal => {
-            const low = optVal.toLowerCase();
-            if (['blue', 'black', 'white', 'red', 'grey', 'gray', 'green'].some(c => low.includes(c))) {
-              extracted.add(optVal);
-            }
-          });
+      let colorHTML = '';
+      if (colorOpt && colorOpt.values.length) {
+        const colorLabel = colorOpt.name && normalizeText(colorOpt.name) !== 'title' ? colorOpt.name : 'Color';
+        colorHTML += `<label class="qv-label">${escapeHTML(colorLabel)}</label><div class="qv-swatch-wrapper">`;
+        colorOpt.values.forEach((val, idx) => {
+          const displayName = getColorDisplayName(val, product);
+          const swatchColor = getSwatchHex(val, product);
+          colorHTML += `<button type="button" class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" data-value="${escapeAttribute(val)}" style="--swatch-color: ${swatchColor};">${escapeHTML(displayName)}</button>`;
         });
-        colorValues = Array.from(extracted);
+        colorHTML += '</div>';
       }
 
-      if (colorValues.length === 0) colorValues = ['Blue', 'Black'];
-      selectedColor = colorValues[0];
-
-      let colorHTML = `<label class="qv-label">Color</label><div class="qv-swatch-wrapper">`;
-      colorValues.forEach((val, idx) => {
-        const hex = detectHexColor(val);
-        colorHTML += `
-          <button type="button" 
-                  class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
-                  style="--swatch-color: ${hex};" 
-                  data-value="${val}">
-            ${val}
-          </button>`;
-      });
-      colorHTML += `</div>`;
-
-      // Size Options
-      let sizeValues = [];
-      const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
-      if (sizeOpt && sizeOpt.values.length > 0) {
-        sizeValues = sizeOpt.values;
-      } else {
-        sizeValues = ['S', 'M', 'L'];
+      let sizeHTML = '';
+      if (sizeOpt && sizeOpt.values.length) {
+        const sizeLabel = sizeOpt.name && normalizeText(sizeOpt.name) !== 'title' ? sizeOpt.name : 'Size';
+        sizeHTML += `<label class="qv-label">${escapeHTML(sizeLabel)}</label>`;
+        sizeHTML += '<select class="qv-size-select" id="qv-size-select-box">';
+        sizeHTML += '<option value="" disabled selected>Choose your size</option>';
+        sizeOpt.values.forEach(val => {
+          sizeHTML += `<option value="${escapeAttribute(val)}">${escapeHTML(val)}</option>`;
+        });
+        sizeHTML += '</select>';
       }
 
-      let sizeHTML = `<label class="qv-label">Size</label>`;
-      sizeHTML += `<div class="qv-size-container">`;
-      sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
-      sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
-      sizeValues.forEach(val => {
-        sizeHTML += `<option value="${val}">${val}</option>`;
-      });
-      sizeHTML += `</select></div>`;
-
-      const imgSrc = product.featured_image ? product.featured_image : '';
+      const imgSrc = product.featured_image || (Array.isArray(product.images) && product.images[0]) || '';
+      const productTitle = product.title || '';
+      const productDescription = product.description ? stripHTML(product.description).substring(0, 70) + '...' : '';
+      const productPrice = typeof product.price === 'number' ? product.price : variants[0].price;
 
       modalContent.innerHTML = `
         <div class="qv-top-row">
           <div class="qv-img-col">
-            <img src="${imgSrc}" alt="${product.title}">
+            <img src="${escapeAttribute(imgSrc)}" alt="${escapeAttribute(productTitle)}">
           </div>
           <div class="qv-details-col">
-            <h3 class="qv-title">${product.title}</h3>
-            <p class="qv-price">${(product.price / 100).toFixed(2)}€</p>
-            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 85) + '...' : ''}</div>
+            <h3 class="qv-title">${escapeHTML(productTitle)}</h3>
+            <p class="qv-price">${((productPrice || 0) / 100).toFixed(2)}&euro;</p>
+            <div class="qv-desc">${escapeHTML(productDescription)}</div>
           </div>
         </div>
         <form id="qv-add-form" class="qv-form-full">
@@ -287,51 +198,49 @@
           ${sizeHTML}
           <button type="submit" class="qv-add-btn">
             <span>ADD TO CART</span>
-            <span class="btn-arrow">&rarr;</span>
+            <span>&rarr;</span>
           </button>
         </form>
       `;
 
-      // Event Listeners for Swatches
-      document.querySelectorAll('.qv-swatch-btn').forEach(btn => {
+      modalContent.querySelectorAll('.qv-swatch-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-          document.querySelectorAll('.qv-swatch-btn').forEach(b => b.classList.remove('active'));
+          modalContent.querySelectorAll('.qv-swatch-btn').forEach(swatch => swatch.classList.remove('active'));
           this.classList.add('active');
-          selectedColor = this.getAttribute('data-value');
+          selectedColor = this.getAttribute('data-value') || '';
         });
       });
 
-      // Size Selection
       const sizeSelect = document.getElementById('qv-size-select-box');
       if (sizeSelect) {
         sizeSelect.addEventListener('change', function() {
-          selectedSize = this.value;
+          selectedSize = this.value || '';
         });
       }
 
-      // Add to Cart Logic
-      document.getElementById('qv-add-form').addEventListener('submit', function(e) {
+      const addForm = document.getElementById('qv-add-form');
+      if (!addForm) return;
+
+      addForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        let matchedVariant = product.variants.find(v => {
-          const opts = v.options.map(o => o.toLowerCase());
-          const hasColor = selectedColor ? opts.includes(selectedColor.toLowerCase()) : true;
-          const hasSize = selectedSize ? opts.includes(selectedSize.toLowerCase()) : true;
-          return hasColor && hasSize;
-        });
+        let matchedVariant = findMatchingVariant(variants, colorOpt, selectedColor, sizeOpt, selectedSize);
+        if (!matchedVariant) matchedVariant = variants.find(variant => variant.available) || variants[0];
 
-        if (!matchedVariant) matchedVariant = product.variants[0];
-
-        const isBlack = selectedColor && selectedColor.toLowerCase().includes('black');
-        const isMedium = selectedSize && (selectedSize.toLowerCase().includes('medium') || selectedSize.toLowerCase() === 'm');
-
+        const normalizedSelectedColor = normalizeText(getColorDisplayName(selectedColor, product));
+        const normalizedSelectedSize = normalizeText(selectedSize);
+        const isBlack = normalizedSelectedColor === 'black';
+        const isMedium = normalizedSelectedSize === 'medium' || normalizedSelectedSize === 'm';
         let itemsToAdd = [{ id: matchedVariant.id, quantity: 1 }];
 
         if (isBlack && isMedium) {
           fetch('/products/dark-winter-jacket.js')
-            .then(res => res.json())
+            .then(res => {
+              if (!res.ok) throw new Error('Hidden product request failed');
+              return res.json();
+            })
             .then(jacketProduct => {
-              if (jacketProduct && jacketProduct.variants && jacketProduct.variants[0]) {
+              if (jacketProduct && Array.isArray(jacketProduct.variants) && jacketProduct.variants[0]) {
                 itemsToAdd.push({ id: jacketProduct.variants[0].id, quantity: 1 });
               }
               postCartItems(itemsToAdd);
@@ -341,6 +250,174 @@
           postCartItems(itemsToAdd);
         }
       });
+    }
+
+    function normalizeProductOptions(product) {
+      const variants = Array.isArray(product.variants) ? product.variants : [];
+      const sourceOptions = Array.isArray(product.options) ? product.options : [];
+      const normalized = sourceOptions.map((option, idx) => {
+        if (typeof option === 'string') {
+          return {
+            name: option,
+            position: idx + 1,
+            values: collectOptionValues(variants, idx)
+          };
+        }
+
+        const position = typeof option.position === 'number' ? option.position : idx + 1;
+        const values = Array.isArray(option.values) && option.values.length
+          ? option.values.filter(Boolean)
+          : collectOptionValues(variants, position - 1);
+
+        return {
+          name: option.name || `Option ${position}`,
+          position: position,
+          values: uniqueValues(values)
+        };
+      });
+
+      for (let idx = normalized.length; idx < 3; idx++) {
+        const values = collectOptionValues(variants, idx);
+        if (values.length) {
+          normalized.push({
+            name: `Option ${idx + 1}`,
+            position: idx + 1,
+            values: values
+          });
+        }
+      }
+
+      return normalized.filter(option => option.values.length && !(option.values.length === 1 && normalizeText(option.values[0]) === 'default title'));
+    }
+
+    function collectOptionValues(variants, optionIndex) {
+      if (!Array.isArray(variants)) return [];
+
+      return uniqueValues(variants.map(variant => {
+        if (Array.isArray(variant.options) && variant.options[optionIndex]) {
+          return variant.options[optionIndex];
+        }
+
+        return variant[`option${optionIndex + 1}`];
+      }).filter(Boolean));
+    }
+
+    function findColorOption(options) {
+      const byName = options.find(option => /colou?r|shade|tone|finish/i.test(option.name || ''));
+      if (byName) return byName;
+
+      const byValue = options.find(option => option.values.some(value => hasColorToken(value)));
+      if (byValue) return byValue;
+
+      return options.find(option => {
+        const values = option.values.map(value => normalizeText(value));
+        return values.length > 1 && !values.every(isSizeValue);
+      }) || null;
+    }
+
+    function findSizeOption(options, colorOpt) {
+      const byName = options.find(option => option !== colorOpt && /size|taille|talla|grandeur/i.test(option.name || ''));
+      if (byName) return byName;
+
+      return options.find(option => option !== colorOpt && option.values.some(value => isSizeValue(normalizeText(value)))) || null;
+    }
+
+    function findMatchingVariant(variants, colorOpt, selectedColor, sizeOpt, selectedSize) {
+      return variants.find(variant => {
+        const colorMatches = !colorOpt || !selectedColor || optionValueMatches(variant, colorOpt.position, selectedColor);
+        const sizeMatches = !sizeOpt || !selectedSize || optionValueMatches(variant, sizeOpt.position, selectedSize);
+        return colorMatches && sizeMatches;
+      });
+    }
+
+    function optionValueMatches(variant, position, selectedValue) {
+      const variantValue = getVariantOptionValue(variant, position);
+      return normalizeText(variantValue) === normalizeText(selectedValue);
+    }
+
+    function getVariantOptionValue(variant, position) {
+      const idx = position - 1;
+      if (Array.isArray(variant.options) && typeof variant.options[idx] !== 'undefined') {
+        return variant.options[idx];
+      }
+
+      return variant[`option${position}`] || '';
+    }
+
+    function getColorDisplayName(value, product) {
+      const originalValue = value || '';
+      const normalized = normalizeText(originalValue);
+
+      if (normalized === 'white black') return 'Blue/Black';
+
+      if (normalized.includes('blue') && normalized.includes('black')) return 'Blue/Black';
+      if (normalized.includes('white') && normalized.includes('black')) return 'Black';
+      if (normalized.includes('black')) return 'Black';
+      if (normalized.includes('blue')) return 'Blue';
+      if (normalized.includes('white')) return 'White';
+
+      return originalValue || 'Color';
+    }
+
+    function getSwatchHex(value, product) {
+      const colorName = normalizeText(getColorDisplayName(value, product));
+      const originalValue = normalizeText(value);
+
+      if (colorName.includes('blue') || originalValue.includes('blue')) return '#0D499F';
+      if (colorName.includes('black') || originalValue.includes('black')) return '#000000';
+      if (colorName.includes('white') || originalValue.includes('white')) return '#FFFFFF';
+      if (colorName.includes('grey') || colorName.includes('gray')) return '#808080';
+      if (colorName.includes('red')) return '#C1121F';
+      if (colorName.includes('green')) return '#1F7A3A';
+      if (colorName.includes('navy')) return '#001F54';
+      if (colorName.includes('cream') || colorName.includes('ivory')) return '#F4EBD0';
+      if (colorName.includes('beige')) return '#D6C6A8';
+      if (colorName.includes('brown')) return '#6F4E37';
+
+      return '#000000';
+    }
+
+    function hasColorToken(value) {
+      return /(black|white|blue|grey|gray|red|green|navy|cream|ivory|beige|brown)/i.test(value || '');
+    }
+
+    function isSizeValue(value) {
+      const normalized = normalizeText(value);
+      return /^(xxs|xs|s|m|l|xl|xxl|xxxl|small|medium|large|one size|os|\d{1,2})$/.test(normalized);
+    }
+
+    function uniqueValues(values) {
+      const seen = new Set();
+      return values.filter(value => {
+        const key = normalizeText(value);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    function normalizeText(value) {
+      return String(value || '').trim().toLowerCase().replace(/&amp;/g, '&').replace(/[^\w]+/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function stripHTML(value) {
+      const temp = document.createElement('div');
+      temp.innerHTML = value || '';
+      return temp.textContent || temp.innerText || '';
+    }
+
+    function escapeHTML(value) {
+      return String(value || '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      })[char]);
+    }
+
+    function escapeAttribute(value) {
+      return escapeHTML(value).replace(/`/g, '&#096;');
     }
 
     function postCartItems(items) {
