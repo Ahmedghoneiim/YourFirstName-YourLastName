@@ -1,345 +1,108 @@
-{% comment %}
-  Section: image-grid.liquid
-  Purpose: Product image grid with a "Quick View" modal.
-  The modal fetches product data via /products/{handle}.js and renders
-  color swatches + a size dropdown, then handles Add to Cart logic
-  (including a special bundling rule for Black / Medium selections).
-
-  Built defensively: every JS function assumes Shopify's option naming
-  and variant title formatting may be inconsistent, and never throws
-  an uncaught error that could freeze the modal UI.
-{% endcomment %}
-
-<div class="qv-grid-section" id="qv-section-{{ section.id }}">
-  <div class="qv-grid-container">
-    {% if section.settings.heading != blank %}
-      <h2 class="qv-grid-heading">{{ section.settings.heading }}</h2>
-    {% endif %}
-
-    <div
-      class="qv-image-grid"
-      style="--qv-columns: {{ section.settings.columns_desktop | default: 4 }}; --qv-columns-mobile: {{ section.settings.columns_mobile | default: 2 }};"
-    >
-      {% for block in section.blocks %}
-        {% if block.type == 'product' %}
-          {% assign product = block.settings.product %}
-          {% if product != blank %}
-            <div class="qv-grid-item" {{ block.shopify_attributes }}>
-              <button
-                type="button"
-                class="qv-grid-item-trigger"
-                data-qv-open
-                data-product-handle="{{ product.handle }}"
-                aria-label="Quick view {{ product.title | escape }}"
-              >
-                <div class="qv-grid-item-image">
-                  {% if product.featured_image != blank %}
-                    <img
-                      src="{{ product.featured_image | image_url: width: 800 }}"
-                      alt="{{ product.featured_image.alt | default: product.title | escape }}"
-                      loading="lazy"
-                      width="800"
-                      height="{{ 800 | divided_by: product.featured_image.aspect_ratio | default: 800 }}"
-                    >
-                  {% else %}
-                    <div class="qv-grid-item-placeholder"></div>
-                  {% endif %}
-                  <span class="qv-grid-item-quickview-label">Quick View</span>
-                </div>
-                <div class="qv-grid-item-info">
-                  <p class="qv-grid-item-title">{{ product.title }}</p>
-                  <p class="qv-grid-item-price">{{ product.price | money }}</p>
-                </div>
-              </button>
-            </div>
-          {% endif %}
+<div class="custom-product-grid-section">
+  <h2 class="section-title">Tisso vison in the wild</h2>
+  <div class="product-grid-container">
+    {% for block in section.blocks %}
+      {% assign product = block.settings.product %}
+      <div class="grid-product-card" {{ block.shopify_attributes }}>
+        {% if product != blank %}
+          <div class="product-image-wrapper">
+            <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="lazy">
+            <button type="button" class="quick-view-btn" data-handle="{{ product.handle }}">+</button>
+          </div>
+        {% else %}
+          <div class="product-image-wrapper placeholder">
+            <p>Select product</p>
+          </div>
         {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-
-  {% comment %} ---------- Quick View Modal ---------- {% endcomment %}
-  <div class="qv-modal-overlay" id="qv-modal-overlay-{{ section.id }}" aria-hidden="true">
-    <div class="qv-modal" role="dialog" aria-modal="true" aria-label="Quick View">
-      <button type="button" class="qv-modal-close" data-qv-close aria-label="Close quick view">&times;</button>
-
-      <div class="qv-modal-body">
-        <div class="qv-modal-image-col">
-          <img class="qv-modal-image" src="" alt="" id="qv-modal-image-{{ section.id }}">
-        </div>
-
-        <div class="qv-modal-info-col">
-          <p class="qv-modal-vendor" id="qv-modal-vendor-{{ section.id }}"></p>
-          <h3 class="qv-modal-title" id="qv-modal-title-{{ section.id }}"></h3>
-          <p class="qv-modal-price" id="qv-modal-price-{{ section.id }}"></p>
-
-          <div class="qv-modal-loading" id="qv-modal-loading-{{ section.id }}" hidden>
-            Loading product details&hellip;
-          </div>
-
-          <div class="qv-modal-error" id="qv-modal-error-{{ section.id }}" role="alert" hidden></div>
-
-          <div class="qv-option-group" id="qv-color-group-{{ section.id }}" hidden>
-            <label class="qv-option-label" id="qv-color-label-{{ section.id }}">Color</label>
-            <div class="qv-swatch-wrapper" id="qv-swatch-wrapper-{{ section.id }}"></div>
-          </div>
-
-          <div class="qv-option-group" id="qv-size-group-{{ section.id }}" hidden>
-            <label class="qv-option-label" id="qv-size-label-{{ section.id }}" for="qv-size-select-{{ section.id }}">Size</label>
-            <select class="qv-size-select" id="qv-size-select-{{ section.id }}"></select>
-          </div>
-
-          <button
-            type="button"
-            class="qv-add-to-cart-btn"
-            id="qv-add-to-cart-{{ section.id }}"
-            disabled
-          >
-            <span class="qv-atc-label">Add to Cart</span>
-            <span class="qv-atc-spinner" hidden></span>
-          </button>
-        </div>
       </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div id="quick-view-modal" class="qv-modal-overlay" style="display: none;">
+  <div class="qv-modal-card">
+    <button type="button" class="qv-close-btn">&times;</button>
+    <div id="qv-modal-content">
+      <p style="text-align:center;">Loading product details...</p>
     </div>
   </div>
 </div>
 
 <style>
-  #qv-section-{{ section.id }} {
-    --qv-border-color: #000000;
+  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: 'Jost', sans-serif; }
+  .section-title { font-size: 26px; margin-bottom: 25px; font-weight: normal; color: #111; }
+  .product-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-product-card { position: relative; }
+  .product-image-wrapper { position: relative; width: 100%; padding-top: 100%; overflow: hidden; }
+  .product-image-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+  
+  .quick-view-btn {
+    position: absolute; bottom: 15px; right: 15px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #000; color: #fff; border: none;
+    cursor: pointer; font-size: 20px; z-index: 5;
+    display: flex; align-items: center; justify-content: center;
   }
 
-  #qv-section-{{ section.id }} .qv-grid-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 40px 20px;
+  .qv-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.4); z-index: 999999;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qv-modal-card {
+    background: #fff; width: 90%; max-width: 350px; padding: 20px;
+    position: relative; border-radius: 0px; box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+  }
+  .qv-close-btn {
+    position: absolute; top: 10px; right: 12px; background: none;
+    border: none; font-size: 20px; cursor: pointer; color: #333; z-index: 10;
   }
 
-  #qv-section-{{ section.id }} .qv-grid-heading {
-    font-size: 28px;
-    margin-bottom: 24px;
-  }
+  .qv-top-row { display: flex; gap: 15px; margin-bottom: 12px; }
+  .qv-img-col { width: 42%; flex-shrink: 0; }
+  .qv-img-col img { width: 100%; height: auto; display: block; object-fit: cover; aspect-ratio: 1/1; }
+  .qv-details-col { width: 58%; display: flex; flex-direction: column; justify-content: flex-start; }
+  
+  .qv-title { font-size: 15px; margin: 0 0 6px 0; font-weight: 400; color: #222; }
+  .qv-price { font-size: 14px; color: #222; margin-bottom: 8px; font-weight: 500; }
+  .qv-desc { font-size: 11px; color: #555; line-height: 1.35; margin: 0; }
 
-  #qv-section-{{ section.id }} .qv-image-grid {
-    display: grid;
-    grid-template-columns: repeat(var(--qv-columns-mobile), 1fr);
-    gap: 16px;
-  }
-
-  @media (min-width: 768px) {
-    #qv-section-{{ section.id }} .qv-image-grid {
-      grid-template-columns: repeat(var(--qv-columns), 1fr);
-      gap: 24px;
-    }
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-trigger {
-    display: block;
-    width: 100%;
-    padding: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    text-align: left;
-    font: inherit;
-    color: inherit;
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-image {
-    position: relative;
-    overflow: hidden;
-    background: #f2f2f2;
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-image img {
-    display: block;
-    width: 100%;
-    height: auto;
-    transition: transform 0.3s ease;
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-trigger:hover .qv-grid-item-image img {
-    transform: scale(1.03);
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-placeholder {
-    width: 100%;
-    padding-top: 125%;
-    background: #e5e5e5;
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-quickview-label {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%) translateY(8px);
-    background: #ffffff;
-    color: #000000;
-    padding: 8px 18px;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    white-space: nowrap;
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-trigger:hover .qv-grid-item-quickview-label,
-  #qv-section-{{ section.id }} .qv-grid-item-trigger:focus-visible .qv-grid-item-quickview-label {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-info {
-    margin-top: 10px;
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-title {
-    font-size: 14px;
-    margin: 0 0 4px;
-  }
-
-  #qv-section-{{ section.id }} .qv-grid-item-price {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  /* ---------- Modal ---------- */
-  #qv-section-{{ section.id }} .qv-modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-overlay.qv-active {
+  .qv-form-full { width: 100%; }
+  .qv-label { font-size: 12px; color: #333; display: block; margin-top: 12px; margin-bottom: 6px; }
+  
+  /* Swatch Frame */
+  .qv-swatch-wrapper {
     display: flex;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal {
-    position: relative;
+    border: 1px solid #000000;
+    width: 100%;
+    margin-bottom: 12px;
+    box-sizing: border-box;
     background: #ffffff;
-    max-width: 900px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
   }
 
-  #qv-section-{{ section.id }} .qv-modal-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: none;
-    border: none;
-    font-size: 28px;
-    line-height: 1;
-    cursor: pointer;
-    z-index: 2;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-body {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  @media (min-width: 700px) {
-    #qv-section-{{ section.id }} .qv-modal-body {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-image-col {
-    background: #f2f2f2;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-info-col {
-    padding: 32px;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-vendor {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #6b7280;
-    margin: 0 0 6px;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-title {
-    font-size: 22px;
-    margin: 0 0 8px;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-price {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 20px;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-loading,
-  #qv-section-{{ section.id }} .qv-modal-error {
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
-
-  #qv-section-{{ section.id }} .qv-modal-error {
-    color: #DC2626;
-  }
-
-  #qv-section-{{ section.id }} .qv-option-group {
-    margin-bottom: 20px;
-  }
-
-  #qv-section-{{ section.id }} .qv-option-label {
-    display: block;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 8px;
-  }
-
-  /* ---------- Swatch box (Figma spec) ---------- */
-  #qv-section-{{ section.id }} .qv-swatch-wrapper {
-    display: flex;
-    border: 1px solid var(--qv-border-color);
-    width: 100%;
-  }
-
-  #qv-section-{{ section.id }} .qv-swatch-btn {
-    position: relative;
+  .qv-swatch-btn {
     flex: 1;
     height: 42px;
     background: #ffffff;
     border: none;
-    border-right: 1px solid var(--qv-border-color);
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: #000000;
+    cursor: pointer;
+    text-align: left;
     padding-left: 16px;
-    padding-right: 8px;
+    position: relative;
     display: flex;
     align-items: center;
-    font-size: 13px;
-    text-align: left;
-    cursor: pointer;
-    overflow: hidden;
-    color: #000000;
+    box-sizing: border-box;
   }
 
-  #qv-section-{{ section.id }} .qv-swatch-btn:last-child {
-    border-right: none;
+  .qv-swatch-btn:not(:last-child) {
+    border-right: 1px solid #000000;
   }
 
-  #qv-section-{{ section.id }} .qv-swatch-btn::before {
-    content: "";
+  .qv-swatch-btn::before {
+    content: '';
     position: absolute;
     left: 0;
     top: 0;
@@ -348,645 +111,250 @@
     background-color: var(--swatch-color, #000000);
   }
 
-  #qv-section-{{ section.id }} .qv-swatch-btn.active {
-    font-weight: 700;
+  .qv-swatch-btn.active {
+    font-weight: bold;
   }
 
-  #qv-section-{{ section.id }} .qv-swatch-btn:focus-visible {
-    outline: 2px solid #0D499F;
-    outline-offset: -2px;
+  .qv-size-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 18px;
   }
 
-  #qv-section-{{ section.id }} .qv-size-select {
+  .qv-size-select {
     width: 100%;
     height: 42px;
-    border: 1px solid var(--qv-border-color);
-    padding: 0 16px;
+    padding: 0 35px 0 12px;
+    border: 1px solid #000000;
     font-size: 13px;
-    background: #ffffff;
-  }
-
-  #qv-section-{{ section.id }} .qv-add-to-cart-btn {
-    width: 100%;
-    height: 48px;
-    background: #000000;
-    color: #ffffff;
-    border: none;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    font-family: 'Jost', sans-serif;
+    background: #fff;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    border-radius: 0;
+    outline: none;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
   }
 
-  #qv-section-{{ section.id }} .qv-add-to-cart-btn:disabled {
-    background: #9ca3af;
-    cursor: not-allowed;
+  .qv-size-container::after {
+    content: '∨';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .qv-add-btn {
+    width: 100%; height: 45px; background: #000000; color: #ffffff;
+    border: none; outline: none; cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: flex; justify-content: center; align-items: center; gap: 10px;
   }
 
-  #qv-section-{{ section.id }} .qv-atc-spinner {
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    border-top-color: #ffffff;
-    border-radius: 50%;
-    animation: qv-spin 0.7s linear infinite;
-  }
-
-  @keyframes qv-spin {
-    to { transform: rotate(360deg); }
+  .qv-add-btn .btn-arrow {
+    font-size: 20px !important; line-height: 1;
+    display: inline-block; font-weight: 300; margin-left: 8px;
   }
 </style>
 
 <script>
-(function () {
-  "use strict";
+  document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('quick-view-modal');
+    const modalContent = document.getElementById('qv-modal-content');
+    const closeBtn = document.querySelector('.qv-close-btn');
 
-  var sectionId = "{{ section.id }}";
+    closeBtn.addEventListener('click', () => modal.style.display = 'none');
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
 
-  /* ============================================================
-     STATE
-     ============================================================ */
-  var currentProduct = null;
-  var colorValues = [];
-  var sizeValues = [];
-  var selectedColor = null;
-  var selectedSize = null;
+    document.querySelectorAll('.quick-view-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const handle = this.getAttribute('data-handle');
+        if (!handle) return;
 
-  /* ============================================================
-     DOM REFERENCES (scoped to this section instance)
-     ============================================================ */
-  var root = document.getElementById("qv-section-" + sectionId);
-  if (!root) { return; }
+        modal.style.display = 'flex';
+        modalContent.innerHTML = '<p style="text-align:center;">Loading product details...</p>';
 
-  var overlay = document.getElementById("qv-modal-overlay-" + sectionId);
-  var modalImage = document.getElementById("qv-modal-image-" + sectionId);
-  var modalVendor = document.getElementById("qv-modal-vendor-" + sectionId);
-  var modalTitle = document.getElementById("qv-modal-title-" + sectionId);
-  var modalPrice = document.getElementById("qv-modal-price-" + sectionId);
-  var modalLoading = document.getElementById("qv-modal-loading-" + sectionId);
-  var modalError = document.getElementById("qv-modal-error-" + sectionId);
-  var colorGroup = document.getElementById("qv-color-group-" + sectionId);
-  var colorLabel = document.getElementById("qv-color-label-" + sectionId);
-  var swatchWrapper = document.getElementById("qv-swatch-wrapper-" + sectionId);
-  var sizeGroup = document.getElementById("qv-size-group-" + sectionId);
-  var sizeLabel = document.getElementById("qv-size-label-" + sectionId);
-  var sizeSelect = document.getElementById("qv-size-select-" + sectionId);
-  var addToCartBtn = document.getElementById("qv-add-to-cart-" + sectionId);
-  var atcSpinner = addToCartBtn ? addToCartBtn.querySelector(".qv-atc-spinner") : null;
-  var atcLabel = addToCartBtn ? addToCartBtn.querySelector(".qv-atc-label") : null;
-
-  /* ============================================================
-     COLOR KEYWORD -> HEX MAP
-     ============================================================ */
-  var COLOR_KEYWORD_MAP = [
-    { keyword: "blue", hex: "#0D499F" },
-    { keyword: "black", hex: "#000000" },
-    { keyword: "white", hex: "#FFFFFF" },
-    { keyword: "red", hex: "#DC2626" },
-    { keyword: "green", hex: "#15803D" },
-    { keyword: "grey", hex: "#6B7280" },
-    { keyword: "gray", hex: "#6B7280" }
-  ];
-
-  function getSwatchColor(colorName) {
-    try {
-      if (!colorName || typeof colorName !== "string") { return "#000000"; }
-      var name = colorName.toLowerCase();
-      for (var i = 0; i < COLOR_KEYWORD_MAP.length; i++) {
-        if (name.indexOf(COLOR_KEYWORD_MAP[i].keyword) !== -1) {
-          return COLOR_KEYWORD_MAP[i].hex;
-        }
-      }
-      return "#000000";
-    } catch (e) {
-      return "#000000";
-    }
-  }
-
-  /* ============================================================
-     SIZE DETECTION HELPER (used when we must infer option type
-     purely from variant titles / option values)
-     ============================================================ */
-  var KNOWN_SIZE_TOKENS = [
-    "xxs", "xs", "s", "m", "l", "xl", "xxl", "xxxl",
-    "small", "medium", "large", "extra small", "extra large", "one size", "os"
-  ];
-
-  function isSizeLikeValue(value) {
-    try {
-      if (!value || typeof value !== "string") { return false; }
-      var v = value.trim().toLowerCase();
-      if (KNOWN_SIZE_TOKENS.indexOf(v) !== -1) { return true; }
-      if (/^\d+(\.\d+)?$/.test(v)) { return true; }
-      if (/^(us|uk|eu)?\s*\d+(\.\d+)?$/.test(v)) { return true; }
-      return false;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  /* ============================================================
-     ROBUST OPTION PARSING
-     Attempts, in order:
-       1. product.options with recognizable names ("color"/"colour", "size")
-       2. Fallback: infer color vs size from product.variants
-          (option1/option2/option3, or variant.title split on "/")
-     Never throws - always returns arrays (possibly empty).
-     ============================================================ */
-  function parseProductOptions(product) {
-    var result = {
-      colorOptionName: null,
-      sizeOptionName: null,
-      colorValues: [],
-      sizeValues: []
-    };
-
-    try {
-      if (product && Array.isArray(product.options)) {
-        product.options.forEach(function (opt) {
-          var optName = "";
-          var optValues = [];
-
-          if (typeof opt === "string") {
-            optName = opt;
-          } else if (opt && typeof opt === "object") {
-            optName = opt.name || "";
-            if (Array.isArray(opt.values)) { optValues = opt.values; }
-          }
-
-          var lowerName = optName.toLowerCase();
-
-          if (/colou?r/.test(lowerName)) {
-            result.colorOptionName = optName;
-            if (optValues.length) { result.colorValues = optValues; }
-          } else if (/size/.test(lowerName)) {
-            result.sizeOptionName = optName;
-            if (optValues.length) { result.sizeValues = optValues; }
-          }
-        });
-      }
-    } catch (e) {
-      // Ignore malformed product.options - fallback below will handle it
-    }
-
-    // Fallback: derive from variants if either list is still empty
-    if ((!result.colorValues.length || !result.sizeValues.length) && product && Array.isArray(product.variants)) {
-      try {
-        var colorSet = [];
-        var sizeSet = [];
-
-        product.variants.forEach(function (variant) {
-          if (!variant) { return; }
-
-          var candidates = [];
-          if (variant.option1) { candidates.push(variant.option1); }
-          if (variant.option2) { candidates.push(variant.option2); }
-          if (variant.option3) { candidates.push(variant.option3); }
-
-          if (!candidates.length && variant.title) {
-            candidates = variant.title.split("/").map(function (s) { return s.trim(); }).filter(Boolean);
-          }
-
-          candidates.forEach(function (val) {
-            if (!val) { return; }
-            if (isSizeLikeValue(val)) {
-              if (sizeSet.indexOf(val) === -1) { sizeSet.push(val); }
-            } else {
-              if (colorSet.indexOf(val) === -1) { colorSet.push(val); }
-            }
+        fetch('/products/' + handle + '.js')
+          .then(res => res.json())
+          .then(product => renderModal(product))
+          .catch(() => {
+            modalContent.innerHTML = '<p style="text-align:center; color:red;">Error loading product.</p>';
           });
-        });
+      });
+    });
 
-        if (!result.colorValues.length) { result.colorValues = colorSet; }
-        if (!result.sizeValues.length) { result.sizeValues = sizeSet; }
-      } catch (e) {
-        // If even the fallback fails, we simply render with empty option lists
+    function getHex(colorName) {
+      const c = colorName.toLowerCase();
+      if (c.includes('blue')) return '#0D499F';
+      if (c.includes('black')) return '#000000';
+      if (c.includes('white')) return '#FFFFFF';
+      if (c.includes('red')) return '#DC2626';
+      if (c.includes('grey') || c.includes('gray')) return '#6B7280';
+      if (c.includes('green')) return '#15803D';
+      return '#000000';
+    }
+
+    function renderModal(product) {
+      let selectedColor = '';
+      let selectedSize = '';
+
+      // Extract colors safe
+      let colors = [];
+      const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color') || o.name.toLowerCase().includes('colour'));
+      if (colorOpt) {
+        colors = colorOpt.values;
+      } else {
+        colors = product.variants.map(v => v.option1).filter((v, i, a) => a.indexOf(v) === i);
       }
-    }
+      if (!colors || colors.length === 0) colors = ['Black', 'White'];
+      selectedColor = colors[0];
 
-    return result;
-  }
+      let colorHTML = `<label class="qv-label">Color</label><div class="qv-swatch-wrapper">`;
+      colors.forEach((col, idx) => {
+        const hex = getHex(col);
+        colorHTML += `
+          <button type="button" 
+                  class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
+                  style="--swatch-color: ${hex};" 
+                  data-value="${col}">
+            ${col}
+          </button>`;
+      });
+      colorHTML += `</div>`;
 
-  /* ============================================================
-     RENDERING
-     ============================================================ */
-  function clearChildren(el) {
-    if (!el) { return; }
-    while (el.firstChild) { el.removeChild(el.firstChild); }
-  }
+      // Extract sizes safe
+      let sizes = [];
+      const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
+      if (sizeOpt) {
+        sizes = sizeOpt.values;
+      } else {
+        sizes = ['S', 'M', 'L'];
+      }
 
-  function renderSwatches(colors) {
-    if (!swatchWrapper) { return; }
-    clearChildren(swatchWrapper);
+      let sizeHTML = `<label class="qv-label">Size</label><div class="qv-size-container">`;
+      sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
+      sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
+      sizes.forEach(s => sizeHTML += `<option value="${s}">${s}</option>`);
+      sizeHTML += `</select></div>`;
 
-    if (!colors || !colors.length) {
-      if (colorGroup) { colorGroup.hidden = true; }
-      return;
-    }
+      modalContent.innerHTML = `
+        <div class="qv-top-row">
+          <div class="qv-img-col"><img src="${product.featured_image || ''}" alt="${product.title}"></div>
+          <div class="qv-details-col">
+            <h3 class="qv-title">${product.title}</h3>
+            <p class="qv-price">${(product.price / 100).toFixed(2)}€</p>
+            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 80) + '...' : ''}</div>
+          </div>
+        </div>
+        <form id="qv-add-form" class="qv-form-full">
+          ${colorHTML}
+          ${sizeHTML}
+          <button type="submit" class="qv-add-btn">
+            <span>ADD TO CART</span>
+            <span class="btn-arrow">&rarr;</span>
+          </button>
+        </form>
+      `;
 
-    if (colorGroup) { colorGroup.hidden = false; }
-
-    colors.forEach(function (color) {
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "qv-swatch-btn";
-      btn.style.setProperty("--swatch-color", getSwatchColor(color));
-      btn.textContent = color;
-      btn.setAttribute("data-color", color);
-      btn.setAttribute("aria-pressed", "false");
-
-      btn.addEventListener("click", function () {
-        try {
-          var allBtns = swatchWrapper.querySelectorAll(".qv-swatch-btn");
-          allBtns.forEach(function (b) {
-            b.classList.remove("active");
-            b.setAttribute("aria-pressed", "false");
-          });
-          btn.classList.add("active");
-          btn.setAttribute("aria-pressed", "true");
-          selectedColor = color;
-          validateSelection();
-        } catch (e) {
-          console.error("QuickView swatch click error:", e);
-        }
+      // Active state for swatches
+      document.querySelectorAll('.qv-swatch-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.qv-swatch-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          selectedColor = this.getAttribute('data-value');
+        });
       });
 
-      swatchWrapper.appendChild(btn);
-    });
-  }
-
-  function renderSizeDropdown(sizes) {
-    if (!sizeSelect) { return; }
-    clearChildren(sizeSelect);
-
-    if (!sizes || !sizes.length) {
-      if (sizeGroup) { sizeGroup.hidden = true; }
-      return;
-    }
-
-    if (sizeGroup) { sizeGroup.hidden = false; }
-
-    var placeholder = document.createElement("option");
-    placeholder.value = "";
-    placeholder.textContent = "Select Size";
-    placeholder.disabled = true;
-    placeholder.selected = true;
-    sizeSelect.appendChild(placeholder);
-
-    sizes.forEach(function (size) {
-      var opt = document.createElement("option");
-      opt.value = size;
-      opt.textContent = size;
-      sizeSelect.appendChild(opt);
-    });
-  }
-
-  function handleSizeChange() {
-    try {
-      selectedSize = sizeSelect.value || null;
-      validateSelection();
-    } catch (e) {
-      console.error("QuickView size change error:", e);
-    }
-  }
-
-  if (sizeSelect) {
-    sizeSelect.addEventListener("change", handleSizeChange);
-  }
-
-  function renderProductInfo(product) {
-    try {
-      if (modalTitle) { modalTitle.textContent = product.title || ""; }
-      if (modalVendor) { modalVendor.textContent = product.vendor || ""; }
-      if (modalPrice) {
-        var price = (typeof product.price === "number") ? product.price : parseInt(product.price, 10);
-        modalPrice.textContent = !isNaN(price) ? formatMoney(price) : "";
+      // Size dropdown change
+      const sizeSelect = document.getElementById('qv-size-select-box');
+      if (sizeSelect) {
+        sizeSelect.addEventListener('change', function() {
+          selectedSize = this.value;
+        });
       }
-      if (modalImage) {
-        var imgSrc = "";
-        if (product.featured_image) {
-          imgSrc = typeof product.featured_image === "string" ? product.featured_image : (product.featured_image.src || "");
-        } else if (Array.isArray(product.images) && product.images.length) {
-          imgSrc = product.images[0];
+
+      // Submit Form
+      document.getElementById('qv-add-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let matchedVariant = product.variants.find(v => {
+          const opts = v.options.map(o => o.toLowerCase());
+          const hasColor = selectedColor ? opts.includes(selectedColor.toLowerCase()) : true;
+          const hasSize = selectedSize ? opts.includes(selectedSize.toLowerCase()) : true;
+          return hasColor && hasSize;
+        });
+
+        if (!matchedVariant) matchedVariant = product.variants[0];
+
+        const isBlack = selectedColor && selectedColor.toLowerCase().includes('black');
+        const isMedium = selectedSize && (selectedSize.toLowerCase().includes('medium') || selectedSize.toLowerCase() === 'm');
+
+        let itemsToAdd = [{ id: matchedVariant.id, quantity: 1 }];
+
+        if (isBlack && isMedium) {
+          fetch('/products/dark-winter-jacket.js')
+            .then(res => res.json())
+            .then(jacketProduct => {
+              if (jacketProduct && jacketProduct.variants && jacketProduct.variants[0]) {
+                itemsToAdd.push({ id: jacketProduct.variants[0].id, quantity: 1 });
+              }
+              postCart(itemsToAdd);
+            })
+            .catch(() => postCart(itemsToAdd));
+        } else {
+          postCart(itemsToAdd);
         }
-        modalImage.src = imgSrc || "";
-        modalImage.alt = product.title || "";
-      }
-    } catch (e) {
-      console.error("QuickView renderProductInfo error:", e);
-    }
-  }
-
-  function formatMoney(cents) {
-    try {
-      var amount = (cents / 100).toFixed(2);
-      return "$" + amount;
-    } catch (e) {
-      return "";
-    }
-  }
-
-  /* ============================================================
-     VALIDATION / BUTTON STATE
-     ============================================================ */
-  function validateSelection() {
-    if (!addToCartBtn) { return; }
-    var needsColor = colorValues.length > 0;
-    var needsSize = sizeValues.length > 0;
-
-    var colorOk = !needsColor || !!selectedColor;
-    var sizeOk = !needsSize || !!selectedSize;
-
-    addToCartBtn.disabled = !(colorOk && sizeOk);
-  }
-
-  /* ============================================================
-     VARIANT MATCHING
-     ============================================================ */
-  function findMatchingVariant(product, color, size) {
-    if (!product || !Array.isArray(product.variants)) { return null; }
-
-    var colorLower = color ? color.toLowerCase() : null;
-    var sizeLower = size ? size.toLowerCase() : null;
-
-    // Pass 1: exact match against option1/option2/option3
-    var exactMatch = product.variants.find(function (variant) {
-      var opts = [variant.option1, variant.option2, variant.option3]
-        .filter(Boolean)
-        .map(function (v) { return v.toLowerCase(); });
-
-      var colorOk = !colorLower || opts.indexOf(colorLower) !== -1;
-      var sizeOk = !sizeLower || opts.indexOf(sizeLower) !== -1;
-      return colorOk && sizeOk;
-    });
-
-    if (exactMatch) { return exactMatch; }
-
-    // Pass 2: loose "contains" match against option values or title
-    // (handles compound values like "Blue Silk / M")
-    var looseMatch = product.variants.find(function (variant) {
-      var haystack = [variant.option1, variant.option2, variant.option3, variant.title]
-        .filter(Boolean)
-        .join(" / ")
-        .toLowerCase();
-
-      var colorOk = !colorLower || haystack.indexOf(colorLower) !== -1;
-      var sizeOk = !sizeLower || haystack.indexOf(sizeLower) !== -1;
-      return colorOk && sizeOk;
-    });
-
-    return looseMatch || null;
-  }
-
-  /* ============================================================
-     ADD TO CART (with special Black + Medium bundling rule)
-     ============================================================ */
-  function setAddToCartLoading(isLoading) {
-    if (!addToCartBtn) { return; }
-    addToCartBtn.disabled = isLoading;
-    if (atcSpinner) { atcSpinner.hidden = !isLoading; }
-    if (atcLabel) { atcLabel.textContent = isLoading ? "Adding..." : "Add to Cart"; }
-  }
-
-  function showError(message) {
-    if (!modalError) { return; }
-    modalError.textContent = message;
-    modalError.hidden = false;
-  }
-
-  function clearError() {
-    if (!modalError) { return; }
-    modalError.hidden = true;
-    modalError.textContent = "";
-  }
-
-  async function handleAddToCart() {
-    clearError();
-
-    if (!currentProduct) {
-      showError("Product data is not available. Please try again.");
-      return;
+      });
     }
 
-    var variant = findMatchingVariant(currentProduct, selectedColor, selectedSize);
-
-    if (!variant) {
-      showError("That combination is not available. Please choose a different option.");
-      return;
-    }
-
-    var items = [{ id: variant.id, quantity: 1 }];
-
-    var colorLower = (selectedColor || "").toLowerCase();
-    var sizeLower = (selectedSize || "").toLowerCase();
-    var isBlack = colorLower.indexOf("black") !== -1;
-    var isMedium = sizeLower.indexOf("medium") !== -1 || sizeLower === "m";
-
-    if (isBlack && isMedium) {
-      try {
-        var jacketRes = await fetch("/products/dark-winter-jacket.js");
-        if (jacketRes.ok) {
-          var jacketProduct = await jacketRes.json();
-          if (jacketProduct && Array.isArray(jacketProduct.variants) && jacketProduct.variants.length) {
-            items.push({ id: jacketProduct.variants[0].id, quantity: 1 });
-          }
-        }
-      } catch (e) {
-        // Non-blocking: if the bonus product can't be fetched, still add the main item
-        console.warn("QuickView: could not fetch bonus jacket product", e);
-      }
-    }
-
-    setAddToCartLoading(true);
-
-    try {
-      var res = await fetch("/cart/add.js", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+    function postCart(items) {
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: items })
+      })
+      .then(res => res.json())
+      .then(() => {
+        modal.style.display = 'none';
+        window.location.href = '/cart';
       });
-
-      if (!res.ok) {
-        var errData = {};
-        try { errData = await res.json(); } catch (parseErr) { /* ignore */ }
-        throw new Error(errData.description || errData.message || "Could not add item to cart.");
-      }
-
-      window.location.href = "/cart";
-    } catch (err) {
-      console.error("QuickView add to cart error:", err);
-      showError(err && err.message ? err.message : "Something went wrong adding to cart.");
-      setAddToCartLoading(false);
-    }
-  }
-
-  if (addToCartBtn) {
-    addToCartBtn.addEventListener("click", function () {
-      handleAddToCart();
-    });
-  }
-
-  /* ============================================================
-     MODAL OPEN / CLOSE / RESET
-     ============================================================ */
-  function resetModalState() {
-    currentProduct = null;
-    colorValues = [];
-    sizeValues = [];
-    selectedColor = null;
-    selectedSize = null;
-
-    clearError();
-    if (modalLoading) { modalLoading.hidden = true; }
-    if (modalTitle) { modalTitle.textContent = ""; }
-    if (modalVendor) { modalVendor.textContent = ""; }
-    if (modalPrice) { modalPrice.textContent = ""; }
-    if (modalImage) { modalImage.src = ""; modalImage.alt = ""; }
-    if (swatchWrapper) { clearChildren(swatchWrapper); }
-    if (sizeSelect) { clearChildren(sizeSelect); }
-    if (colorGroup) { colorGroup.hidden = true; }
-    if (sizeGroup) { sizeGroup.hidden = true; }
-    if (addToCartBtn) { addToCartBtn.disabled = true; }
-    setAddToCartLoading(false);
-  }
-
-  function openModal() {
-    if (!overlay) { return; }
-    overlay.classList.add("qv-active");
-    overlay.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeModal() {
-    if (!overlay) { return; }
-    overlay.classList.remove("qv-active");
-    overlay.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    resetModalState();
-  }
-
-  async function openQuickView(handle) {
-    if (!handle) { return; }
-
-    resetModalState();
-    openModal();
-
-    if (modalLoading) { modalLoading.hidden = false; }
-
-    try {
-      var res = await fetch("/products/" + handle + ".js");
-      if (!res.ok) { throw new Error("Product not found."); }
-
-      var product = await res.json();
-      currentProduct = product;
-
-      renderProductInfo(product);
-
-      var parsed = parseProductOptions(product);
-      colorValues = parsed.colorValues || [];
-      sizeValues = parsed.sizeValues || [];
-
-      if (colorLabel && parsed.colorOptionName) { colorLabel.textContent = parsed.colorOptionName; }
-      if (sizeLabel && parsed.sizeOptionName) { sizeLabel.textContent = parsed.sizeOptionName; }
-
-      renderSwatches(colorValues);
-      renderSizeDropdown(sizeValues);
-      validateSelection();
-    } catch (err) {
-      console.error("QuickView fetch error:", err);
-      showError("Unable to load product details. Please try again.");
-    } finally {
-      if (modalLoading) { modalLoading.hidden = true; }
-    }
-  }
-
-  /* ============================================================
-     EVENT DELEGATION: open triggers + close triggers
-     ============================================================ */
-  root.addEventListener("click", function (event) {
-    var trigger = event.target.closest("[data-qv-open]");
-    if (trigger) {
-      var handle = trigger.getAttribute("data-product-handle");
-      openQuickView(handle);
-      return;
-    }
-
-    var closeTrigger = event.target.closest("[data-qv-close]");
-    if (closeTrigger) {
-      closeModal();
-      return;
-    }
-
-    // Click on the overlay backdrop itself (not the modal content) closes it
-    if (event.target === overlay) {
-      closeModal();
     }
   });
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && overlay && overlay.classList.contains("qv-active")) {
-      closeModal();
-    }
-  });
-})();
 </script>
 
 {% schema %}
 {
-  "name": "Image Grid (Quick View)",
-  "tag": "section",
-  "class": "qv-section",
-  "settings": [
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Shop the Collection"
-    },
-    {
-      "type": "range",
-      "id": "columns_desktop",
-      "label": "Columns (desktop)",
-      "min": 2,
-      "max": 6,
-      "step": 1,
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "columns_mobile",
-      "label": "Columns (mobile)",
-      "min": 1,
-      "max": 3,
-      "step": 1,
-      "default": 2
-    }
-  ],
+  "name": "Custom Product Grid",
+  "settings": [],
   "blocks": [
     {
-      "type": "product",
+      "type": "product_block",
       "name": "Product",
       "settings": [
         {
           "type": "product",
           "id": "product",
-          "label": "Product"
+          "label": "Select Product"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Image Grid (Quick View)",
+      "name": "Custom Product Grid",
       "blocks": [
-        { "type": "product" },
-        { "type": "product" },
-        { "type": "product" },
-        { "type": "product" }
+        { "type": "product_block" },
+        { "type": "product_block" },
+        { "type": "product_block" }
       ]
     }
   ]
