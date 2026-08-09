@@ -7,22 +7,23 @@
       <span></span>
     </div>
     <div class="brand-logo">{{ section.settings.logo_text }}</div>
-    <div class="top-center-text">{{ section.settings.top_center_text }}</div>
-    <a href="{{ section.settings.yellow_btn_link }}" class="yellow-btn-animated">
-      <span>{{ section.settings.yellow_btn_text }}</span>
-      <span class="btn-arrow">&rarr;</span>
-    </a>
+    
+    <div class="mobile-dropdown-content">
+      <div class="top-center-text">{{ section.settings.top_center_text }}</div>
+      <a href="{{ section.settings.yellow_btn_link }}" class="yellow-btn-animated">
+        <span>{{ section.settings.yellow_btn_text }}</span>
+        <span class="btn-arrow">&rarr;</span>
+      </a>
+    </div>
   </div>
 
   <div class="figma-group-hero">
-    <!-- Desktop Image -->
     <img 
       src="{{ section.settings.bg_image | image_url: width: 3840 }}" 
       alt="Hero Desktop Graphics" 
       class="hero-absolute-img desktop-only-img"
     >
 
-    <!-- Mobile Image (Fallback to desktop image if mobile image is not uploaded) -->
     {% assign mobile_img = section.settings.bg_image_mobile | default: section.settings.bg_image %}
     <img 
       src="{{ mobile_img | image_url: width: 800 }}" 
@@ -70,6 +71,10 @@
     box-sizing: border-box;
     position: relative;
     z-index: 10;
+  }
+
+  .mobile-dropdown-content {
+    display: contents;
   }
 
   .mobile-menu-icon {
@@ -129,7 +134,6 @@
     z-index: 1;
   }
 
-  /* Visibility Controls for Dual Images */
   .mobile-only-img {
     display: none;
   }
@@ -177,12 +181,12 @@
     white-space: nowrap;
   }
   .black-btn-animated .btn-arrow {
-      font-size: 22px !important; /* تكبير حجم السهم ليطابق Figma */
-      line-height: 1;
-      display: inline-block;
-      margin-left: 8px; /* ضبط المسافة بين النص والسهم */
-      font-weight: 300; /* جعل خط السهم رفيع ودقيق زي الصورة */
-    }
+    font-size: 22px !important;
+    line-height: 1;
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: 300;
+  }
 
   .figma-frame-1957 {
     display: flex;
@@ -202,7 +206,6 @@
     z-index: 10;
   }
 
-  /* Mobile Custom Image Settings */
   @media screen and (max-width: 768px) {
     .desktop-only-img {
       display: none !important;
@@ -236,6 +239,56 @@
       font-size: 18px;
       margin: 0 auto;
       letter-spacing: 1px;
+    }
+
+    .mobile-dropdown-content {
+      display: none;
+    }
+
+    .hero-master-container.menu-open .mobile-dropdown-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: #F5F5F5;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 99;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .hero-master-container.menu-open .mobile-dropdown-content .top-center-text {
+      display: block !important;
+      font-size: 14px;
+      color: #333333;
+      margin-bottom: 15px;
+    }
+
+    .hero-master-container.menu-open .mobile-dropdown-content .yellow-btn-animated {
+      display: inline-flex !important;
+      position: static !important;
+      transform: none !important;
+      width: auto;
+      padding: 10px 20px;
+      font-size: 12px;
+    }
+
+    .hero-master-container.menu-open .mobile-menu-icon span {
+      display: none;
+    }
+
+    .hero-master-container.menu-open .mobile-menu-icon::after {
+      content: "×";
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 300;
+      display: block;
+      cursor: pointer;
     }
 
     .top-center-text,
@@ -308,11 +361,11 @@
       z-index: 6;
     }
     .black-btn-animated .btn-arrow {
-      font-size: 22px !important; /* تكبير حجم السهم ليطابق Figma */
+      font-size: 22px !important;
       line-height: 1;
       display: inline-block;
-      margin-left: 8px; /* ضبط المسافة بين النص والسهم */
-      font-weight: 300; /* جعل خط السهم رفيع ودقيق زي الصورة */
+      margin-left: 8px;
+      font-weight: 300;
     }
 
     .figma-frame-1957 {
@@ -320,11 +373,23 @@
       height: auto;
       font-size: 14px;
       text-align: center;
-      font-weight:400;
-      line-height:13.42px;
+      font-weight: 400;
+      line-height: 13.42px;
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuIcon = document.querySelector('.mobile-menu-icon');
+    const container = document.querySelector('.hero-master-container');
+    if (menuIcon && container) {
+      menuIcon.addEventListener('click', function() {
+        container.classList.toggle('menu-open');
+      });
+    }
+  });
+</script>
 
 {% schema %}
 {
