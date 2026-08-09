@@ -48,7 +48,37 @@
 </div>
 
 <style>
-  
+  /* Smooth Transition & Animations for Buttons */
+.quick-view-btn, 
+.qv-add-btn, 
+.banner-btn {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+/* Hover Effect */
+.quick-view-btn:hover {
+  transform: scale(1.1);
+  background-color: #333333 !important;
+}
+
+.qv-add-btn:hover {
+  background-color: #222222 !important;
+  letter-spacing: 1px;
+}
+
+.qv-add-btn:hover .btn-arrow {
+  transform: translateX(5px);
+}
+
+.qv-add-btn .btn-arrow {
+  transition: transform 0.3s ease;
+}
+
+/* Active/Click Effect */
+.quick-view-btn:active, 
+.qv-add-btn:active {
+  transform: scale(0.95);
+}
   .hero-master-container {
     width: 100%;
     max-width: 3840px;
