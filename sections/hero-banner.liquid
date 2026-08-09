@@ -157,12 +157,15 @@
   }
 
   .hero-description {
-    font-size: clamp(11px, 1.05vw, 28px);
-    color: #222222 !important;
-    line-height: 1.4;
-    margin-bottom: 1.8vw;
+    font-size: 14px;
+    line-height: 1.35;
+    max-width: 300px;
+    margin: 0 auto;
   }
-
+  .hero-description::before {
+    content: "Discover Joy: Your Ultimate Holiday Gift Destination.";
+    display: block;
+  }
   .black-btn-animated {
     background-color: #000000;
     color: #ffffff;
