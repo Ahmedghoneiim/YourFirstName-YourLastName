@@ -48,37 +48,7 @@
 </div>
 
 <style>
-  /* Smooth Transition & Animations for Buttons */
-.quick-view-btn, 
-.qv-add-btn, 
-.banner-btn {
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-}
-
-/* Hover Effect */
-.quick-view-btn:hover {
-  transform: scale(1.1);
-  background-color: #333333 !important;
-}
-
-.qv-add-btn:hover {
-  background-color: #222222 !important;
-  letter-spacing: 1px;
-}
-
-.qv-add-btn:hover .btn-arrow {
-  transform: translateX(5px);
-}
-
-.qv-add-btn .btn-arrow {
-  transition: transform 0.3s ease;
-}
-
-/* Active/Click Effect */
-.quick-view-btn:active, 
-.qv-add-btn:active {
-  transform: scale(0.95);
-}
+  /* Base Layout & System */
   .hero-master-container {
     width: 100%;
     max-width: 3840px;
@@ -135,6 +105,7 @@
     color: #333333;
   }
 
+  /* Yellow Button Animations & Styles */
   .yellow-btn-animated {
     background-color: #FFF200;
     color: #000000;
@@ -146,6 +117,20 @@
     align-items: center;
     gap: 8px;
     white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .yellow-btn-animated:hover {
+    background-color: #e6d900;
+    letter-spacing: 0.5px;
+  }
+
+  .yellow-btn-animated:hover .btn-arrow {
+    transform: translateX(4px);
+  }
+
+  .yellow-btn-animated:active {
+    transform: scale(0.96);
   }
 
   .figma-group-hero {
@@ -198,6 +183,7 @@
     margin-bottom: 1.8vw;
   }
 
+  /* Black Main Shop Button Animations & Styles */
   .black-btn-animated {
     background-color: #000000;
     color: #ffffff;
@@ -210,13 +196,30 @@
     align-items: center;
     min-width: 120px;
     white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-  .black-btn-animated .btn-arrow {
+
+  .black-btn-animated:hover {
+    background-color: #222222;
+    letter-spacing: 1px;
+  }
+
+  .black-btn-animated:hover .btn-arrow {
+    transform: translateX(6px);
+  }
+
+  .black-btn-animated:active {
+    transform: scale(0.96);
+  }
+
+  .black-btn-animated .btn-arrow,
+  .yellow-btn-animated .btn-arrow {
     font-size: 22px !important;
     line-height: 1;
     display: inline-block;
     margin-left: 8px;
     font-weight: 300;
+    transition: transform 0.3s ease;
   }
 
   .figma-frame-1957 {
@@ -237,6 +240,7 @@
     z-index: 10;
   }
 
+  /* Mobile Responsive */
   @media screen and (max-width: 768px) {
     .desktop-only-img {
       display: none !important;
@@ -391,12 +395,14 @@
       box-sizing: border-box;
       z-index: 6;
     }
-    .black-btn-animated .btn-arrow {
-      font-size: 22px !important;
-      line-height: 1;
-      display: inline-block;
-      margin-left: 8px;
-      font-weight: 300;
+
+    /* Preserve Mobile Alignment on Hover */
+    .black-btn-animated:hover {
+      transform: translateX(-50%) scale(1.02) !important;
+    }
+
+    .black-btn-animated:active {
+      transform: translateX(-50%) scale(0.96) !important;
     }
 
     .figma-frame-1957 {
