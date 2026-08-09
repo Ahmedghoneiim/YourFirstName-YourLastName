@@ -176,222 +176,41 @@
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('quick-view-modal');
-    const modalContent = document.getElementById('qv-modal-content');
-    const closeBtn = document.querySelector('.qv-close-btn');
+  // استبدل الجزء الخاص برسم الألوان (colorHTML) داخل renderModalData بهذا الكود فقط:
 
-    closeBtn.addEventListener('click', function() { modal.style.display = 'none'; });
-    modal.addEventListener('click', function(e) { if (e.target === modal) modal.style.display = 'none'; });
+let colorHTML = '';
+const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
 
-    document.querySelectorAll('.quick-view-btn').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const handle = this.getAttribute('data-handle');
-        if (!handle) return;
+// خريطة شاملة لتحويل اسم أي لون من Shopify لـ Hex مطابق
+const colorHexMap = {
+  'blue': '#0D499F',
+  'black': '#000000',
+  'white': '#FFFFFF',
+  'red': '#DC2626',
+  'grey': '#6B7280',
+  'gray': '#6B7280',
+  'green': '#15803D'
+};
 
-        modal.style.display = 'flex';
-        modalContent.innerHTML = '<p style="text-align:center;">Loading product details...</p>';
+if (colorOpt && colorOpt.values.length > 0) {
+  selectedColor = colorOpt.values[0];
+  colorHTML += `<label class="qv-label">${colorOpt.name}</label><div class="qv-swatch-wrapper">`;
+  
+  colorOpt.values.forEach((val, idx) => {
+    const cleanVal = val.toLowerCase().trim();
+    // يقرأ اللون الخاص بالمنتج، ولو أزرق يأخذ #0D499F
+    const hexColor = colorHexMap[cleanVal] || cleanVal;
 
-        fetch('/products/' + handle + '.js')
-          .then(res => res.json())
-          .then(product => renderModalData(product))
-          .catch(() => {
-            modalContent.innerHTML = '<p style="text-align:center; color:red;">Failed to load product.</p>';
-          });
-      });
-    });
-
-    function renderModalData(product) {
-      let selectedColor = '';
-      let selectedSize = '';
-
-      const titleLower = product.title.toLowerCase();
-      const handleLower = product.handle.toLowerCase();
-
-      let colorList = [];
-
-      // التنسيق للجاكيت (Tailored Jacket) خصيصاً باللون الأزرق المبعوث #000000 و #0D499F
-      if (titleLower.includes('jacket') || titleLower.includes('tailored') || handleLower.includes('jacket') || handleLower.includes('tailored')) {
-        colorList = [
-          { name: 'Blue', hex: '#0D499F' },
-          { name: 'Black', hex: '#000000' }
-        ];
-      } 
-      else if (titleLower.includes('dress') || handleLower.includes('dress')) {
-        colorList = [
-          { name: 'Red', hex: '#DC2626' },
-          { name: 'Grey', hex: '#6B7280' }
-        ];
-      }
-      else if (titleLower.includes('coat') || handleLower.includes('coat')) {
-        colorList = [
-          { name: 'White', hex: '#FFFFFF' },
-          { name: 'Black', hex: '#000000' }
-        ];
-      }
-      else if (titleLower.includes('t-shirt') || titleLower.includes('tshirt') || handleLower.includes('t-shirt')) {
-        colorList = [
-          { name: 'Grey', hex: '#6B7280' },
-          { name: 'Black', hex: '#000000' }
-        ];
-      }
-      else if (titleLower.includes('top') || handleLower.includes('top')) {
-        colorList = [
-          { name: 'Blue', hex: '#0D499F' },
-          { name: 'Black', hex: '#000000' }
-        ];
-      }
-      else {
-        // قراءة الخيارات من Shopify مع ربط كود الأزرق #0D499F إذا وجد لون Blue
-        const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
-        if (colorOpt && colorOpt.values.length > 0) {
-          const colorHexMap = { 
-            'blue': '#0D499F', 
-            'black': '#000000', 
-            'white': '#FFFFFF', 
-            'red': '#DC2626', 
-            'grey': '#6B7280', 
-            'gray': '#6B7280' 
-          };
-          colorList = colorOpt.values.slice(0, 2).map(val => ({
-            name: val,
-            hex: colorHexMap[val.toLowerCase().trim()] || '#000000'
-          }));
-        } else {
-          colorList = [
-            { name: 'Blue', hex: '#0D499F' },
-            { name: 'Black', hex: '#000000' }
-          ];
-        }
-      }
-
-      selectedColor = colorList[0].name;
-
-      let colorHTML = `<label class="qv-label">Color</label><div class="qv-swatch-wrapper">`;
-      colorList.forEach((item, idx) => {
-        colorHTML += `
-          <button type="button" 
-                  class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
-                  style="--swatch-color: ${item.hex};" 
-                  data-value="${item.name}">
-            ${item.name}
-          </button>`;
-      });
-      colorHTML += `</div>`;
-
-      // Sizes Dropdown
-      const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
-      let sizeHTML = '';
-      if (sizeOpt && sizeOpt.values.length > 0) {
-        sizeHTML += `<label class="qv-label">Size</label>`;
-        sizeHTML += `<div class="qv-size-container">`;
-        sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
-        sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
-        sizeOpt.values.forEach(val => {
-          sizeHTML += `<option value="${val}">${val}</option>`;
-        });
-        sizeHTML += `</select></div>`;
-      } else {
-        sizeHTML += `<label class="qv-label">Size</label>`;
-        sizeHTML += `<div class="qv-size-container">`;
-        sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
-        sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
-        sizeHTML += `<option value="S">Small (S)</option>`;
-        sizeHTML += `<option value="M">Medium (M)</option>`;
-        sizeHTML += `<option value="L">Large (L)</option>`;
-        sizeHTML += `</select></div>`;
-      }
-
-      const imgSrc = product.featured_image ? product.featured_image : '';
-
-      modalContent.innerHTML = `
-        <div class="qv-top-row">
-          <div class="qv-img-col">
-            <img src="${imgSrc}" alt="${product.title}">
-          </div>
-          <div class="qv-details-col">
-            <h3 class="qv-title">${product.title}</h3>
-            <p class="qv-price">${(product.price / 100).toFixed(2)}€</p>
-            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 85) + '...' : ''}</div>
-          </div>
-        </div>
-        <form id="qv-add-form" class="qv-form-full">
-          ${colorHTML}
-          ${sizeHTML}
-          <button type="submit" class="qv-add-btn">
-            <span>ADD TO CART</span>
-            <span class="btn-arrow">&rarr;</span>
-          </button>
-        </form>
-      `;
-
-      // Event Listeners Swatches
-      document.querySelectorAll('.qv-swatch-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          document.querySelectorAll('.qv-swatch-btn').forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-          selectedColor = this.getAttribute('data-value');
-        });
-      });
-
-      // Event Listener Select Size
-      const sizeSelect = document.getElementById('qv-size-select-box');
-      if (sizeSelect) {
-        sizeSelect.addEventListener('change', function() {
-          selectedSize = this.value;
-        });
-      }
-
-      // Add to Cart Event
-      document.getElementById('qv-add-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        let matchedVariant = product.variants.find(v => {
-          const opts = v.options.map(o => o.toLowerCase());
-          const hasColor = selectedColor ? opts.includes(selectedColor.toLowerCase()) : true;
-          const hasSize = selectedSize ? opts.includes(selectedSize.toLowerCase()) : true;
-          return hasColor && hasSize;
-        });
-
-        if (!matchedVariant) matchedVariant = product.variants[0];
-
-        const isBlack = selectedColor.toLowerCase() === 'black';
-        const isMedium = selectedSize.toLowerCase() === 'medium' || selectedSize.toLowerCase() === 'm';
-
-        let itemsToAdd = [{ id: matchedVariant.id, quantity: 1 }];
-
-        if (isBlack && isMedium) {
-          fetch('/products/dark-winter-jacket.js')
-            .then(res => res.json())
-            .then(jacketProduct => {
-              if (jacketProduct && jacketProduct.variants && jacketProduct.variants[0]) {
-                itemsToAdd.push({ id: jacketProduct.variants[0].id, quantity: 1 });
-              }
-              postCartItems(itemsToAdd);
-            })
-            .catch(() => postCartItems(itemsToAdd));
-        } else {
-          postCartItems(itemsToAdd);
-        }
-      });
-    }
-
-    function postCartItems(items) {
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: items })
-      })
-      .then(res => res.json())
-      .then(() => {
-        modal.style.display = 'none';
-        window.location.href = '/cart';
-      });
-    }
+    colorHTML += `
+      <button type="button" 
+              class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
+              style="--swatch-color: ${hexColor};" 
+              data-value="${val}">
+        ${val}
+      </button>`;
   });
+  colorHTML += `</div>`;
+}
 </script>
 
 {% schema %}
