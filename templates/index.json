@@ -93,53 +93,67 @@
         "bottom_footer_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL."
       }
     },
-    "hero_gift_guide_4BmGf8": {
-      "type": "hero-gift-guide",
-      "name": "Hero Gift Guide",
-      "settings": {
-        "heading": "The Gift Guide",
-        "subheading": "Discover our top selection of products for you.",
-        "button_label": "SHOP NOW",
-        "button_link": ""
-      }
-    },
     "image_grid_QxcFpz": {
       "type": "image-grid",
       "blocks": {
         "product_block_8ntkbL": {
           "type": "product_block",
           "settings": {
-            "product": "black-leather-bag"
+            "product": "black-leather-bag",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
           }
         },
         "product_block_h6bDnA": {
           "type": "product_block",
           "settings": {
-            "product": "blue-silk-tuxedo"
+            "product": "blue-silk-tuxedo",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
           }
         },
         "product_block_dtAitD": {
           "type": "product_block",
           "settings": {
-            "product": "chequered-red-shirt"
+            "product": "chequered-red-shirt",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
           }
         },
         "product_block_WyF39Y": {
           "type": "product_block",
           "settings": {
-            "product": "classic-leather-jacket"
+            "product": "classic-leather-jacket",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
           }
         },
         "product_block_44LXc7": {
           "type": "product_block",
           "settings": {
-            "product": "classic-varsity-top"
+            "product": "classic-varsity-top",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
           }
         },
         "product_block_mUwGGj": {
           "type": "product_block",
           "settings": {
-            "product": "dark-denim-top"
+            "product": "dark-denim-top",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
           }
         }
       },
@@ -153,13 +167,23 @@
       ],
       "name": "Image Grid (Quick View)",
       "settings": {}
+    },
+    "hero_gift_guide_4BmGf8": {
+      "type": "hero-gift-guide",
+      "name": "Hero Gift Guide",
+      "settings": {
+        "heading": "The Gift Guide",
+        "subheading": "Discover our top selection of products for you.",
+        "button_label": "SHOP NOW",
+        "button_link": ""
+      }
     }
   },
   "order": [
     "image_banner",
     "featured_collection",
     "hero_banner_NiUPnY",
-    "hero_gift_guide_4BmGf8",
-    "image_grid_QxcFpz"
+    "image_grid_QxcFpz",
+    "hero_gift_guide_4BmGf8"
   ]
 }
