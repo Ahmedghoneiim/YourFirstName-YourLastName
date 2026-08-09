@@ -29,7 +29,6 @@
 </div>
 
 <style>
-  /* Base Layout */
   .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: 'Jost', sans-serif; }
   .section-title { font-size: 26px; margin-bottom: 25px; font-weight: normal; color: #111; }
   .product-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -45,7 +44,6 @@
     display: flex; align-items: center; justify-content: center;
   }
 
-  /* Modal Style - Pixel-Perfect Matching Figma */
   .qv-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.4); z-index: 999999;
@@ -72,7 +70,7 @@
   .qv-form-full { width: 100%; }
   .qv-label { font-size: 12px; color: #333; display: block; margin-top: 12px; margin-bottom: 6px; }
   
-  /* Color Swatches - Component 208 Figma Specs */
+  /* Color Swatches Frame */
   .qv-swatch-wrapper {
     display: flex;
     border: 1px solid #000000;
@@ -99,12 +97,10 @@
     box-sizing: border-box;
   }
 
-  /* الفاصل الأسود في النص */
   .qv-swatch-btn:not(:last-child) {
     border-right: 2px solid #000000;
   }
 
-  /* الشريط العمودي الملون (4.84px width in Figma) */
   .qv-swatch-btn::before {
     content: '';
     position: absolute;
@@ -119,7 +115,6 @@
     font-weight: 600;
   }
 
-  /* Size Dropdown Box */
   .qv-size-container {
     position: relative;
     width: 100%;
@@ -154,7 +149,6 @@
     color: #000;
   }
   
-  /* Add To Cart Button */
   .qv-add-btn {
     width: 100%; height: 45px; background: #000000; color: #ffffff;
     border: none; outline: none; cursor: pointer;
@@ -207,135 +201,50 @@
     function renderModalData(product) {
       let selectedColor = '';
       let selectedSize = '';
-// استبدل الجزء الخاص برسم الألوان (colorHTML) داخل renderModalData بهذا الكود فقط:
 
-let colorHTML = '';
-const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
+      // 1. قراءة الألوان الديناميكية الحقيقية من Shopify للمنتج الحالي
+      const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
+      const colorHexMap = {
+        'blue': '#0D499F',
+        'black': '#000000',
+        'white': '#FFFFFF',
+        'red': '#DC2626',
+        'grey': '#6B7280',
+        'gray': '#6B7280',
+        'green': '#15803D'
+      };
 
-// خريطة شاملة لتحويل اسم أي لون من Shopify لـ Hex مطابق
-const colorHexMap = {
-  'blue': '#0D499F',
-  'black': '#000000',
-  'white': '#FFFFFF',
-  'red': '#DC2626',
-  'grey': '#6B7280',
-  'gray': '#6B7280',
-  'green': '#15803D'
-};
+      let colorHTML = '';
+      if (colorOpt && colorOpt.values.length > 0) {
+        selectedColor = colorOpt.values[0];
+        colorHTML += `<label class="qv-label">${colorOpt.name}</label><div class="qv-swatch-wrapper">`;
+        
+        colorOpt.values.forEach((val, idx) => {
+          const cleanVal = val.toLowerCase().trim();
+          const hexColor = colorHexMap[cleanVal] || '#000000';
 
-if (colorOpt && colorOpt.values.length > 0) {
-  selectedColor = colorOpt.values[0];
-  colorHTML += `<label class="qv-label">${colorOpt.name}</label><div class="qv-swatch-wrapper">`;
-  
-  colorOpt.values.forEach((val, idx) => {
-    const cleanVal = val.toLowerCase().trim();
-    // يقرأ اللون الخاص بالمنتج، ولو أزرق يأخذ #0D499F
-    const hexColor = colorHexMap[cleanVal] || cleanVal;
-
-    colorHTML += `
-      <button type="button" 
-              class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
-              style="--swatch-color: ${hexColor};" 
-              data-value="${val}">
-        ${val}
-      </button>`;
-  });
-  colorHTML += `</div>`;
-}
-      const titleLower = product.title.toLowerCase();
-      const handleLower = product.handle.toLowerCase();
-
-      let colorList = [];
-
-      // التنسيق للجاكيت (Tailored Jacket) خصيصاً باللون الأزرق المبعوث #000000 و #0D499F
-      if (titleLower.includes('jacket') || titleLower.includes('tailored') || handleLower.includes('jacket') || handleLower.includes('tailored')) {
-        colorList = [
-          { name: 'Blue', hex: '#0D499F' },
-          { name: 'Black', hex: '#000000' }
-        ];
-      } 
-      else if (titleLower.includes('dress') || handleLower.includes('dress')) {
-        colorList = [
-          { name: 'Red', hex: '#DC2626' },
-          { name: 'Grey', hex: '#6B7280' }
-        ];
-      }
-      else if (titleLower.includes('coat') || handleLower.includes('coat')) {
-        colorList = [
-          { name: 'White', hex: '#FFFFFF' },
-          { name: 'Black', hex: '#000000' }
-        ];
-      }
-      else if (titleLower.includes('t-shirt') || titleLower.includes('tshirt') || handleLower.includes('t-shirt')) {
-        colorList = [
-          { name: 'Grey', hex: '#6B7280' },
-          { name: 'Black', hex: '#000000' }
-        ];
-      }
-      else if (titleLower.includes('top') || handleLower.includes('top')) {
-        colorList = [
-          { name: 'Blue', hex: '#0D499F' },
-          { name: 'Black', hex: '#000000' }
-        ];
-      }
-      else {
-        // قراءة الخيارات من Shopify مع ربط كود الأزرق #0D499F إذا وجد لون Blue
-        const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
-        if (colorOpt && colorOpt.values.length > 0) {
-          const colorHexMap = { 
-            'blue': '#0D499F', 
-            'black': '#000000', 
-            'white': '#FFFFFF', 
-            'red': '#DC2626', 
-            'grey': '#6B7280', 
-            'gray': '#6B7280' 
-          };
-          colorList = colorOpt.values.slice(0, 2).map(val => ({
-            name: val,
-            hex: colorHexMap[val.toLowerCase().trim()] || '#000000'
-          }));
-        } else {
-          colorList = [
-            { name: 'Blue', hex: '#0D499F' },
-            { name: 'Black', hex: '#000000' }
-          ];
-        }
+          colorHTML += `
+            <button type="button" 
+                    class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
+                    style="--swatch-color: ${hexColor};" 
+                    data-value="${val}">
+              ${val}
+            </button>`;
+        });
+        colorHTML += `</div>`;
       }
 
-      selectedColor = colorList[0].name;
-
-      let colorHTML = `<label class="qv-label">Color</label><div class="qv-swatch-wrapper">`;
-      colorList.forEach((item, idx) => {
-        colorHTML += `
-          <button type="button" 
-                  class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
-                  style="--swatch-color: ${item.hex};" 
-                  data-value="${item.name}">
-            ${item.name}
-          </button>`;
-      });
-      colorHTML += `</div>`;
-
-      // Sizes Dropdown
+      // 2. قراءة الأحجام الحقيقية من Shopify
       const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
       let sizeHTML = '';
       if (sizeOpt && sizeOpt.values.length > 0) {
-        sizeHTML += `<label class="qv-label">Size</label>`;
+        sizeHTML += `<label class="qv-label">${sizeOpt.name}</label>`;
         sizeHTML += `<div class="qv-size-container">`;
         sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
         sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
         sizeOpt.values.forEach(val => {
           sizeHTML += `<option value="${val}">${val}</option>`;
         });
-        sizeHTML += `</select></div>`;
-      } else {
-        sizeHTML += `<label class="qv-label">Size</label>`;
-        sizeHTML += `<div class="qv-size-container">`;
-        sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
-        sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
-        sizeHTML += `<option value="S">Small (S)</option>`;
-        sizeHTML += `<option value="M">Medium (M)</option>`;
-        sizeHTML += `<option value="L">Large (L)</option>`;
         sizeHTML += `</select></div>`;
       }
 
@@ -362,7 +271,7 @@ if (colorOpt && colorOpt.values.length > 0) {
         </form>
       `;
 
-      // Event Listeners Swatches
+      // 3. ربط أزرار الألوان بعد الرندر
       document.querySelectorAll('.qv-swatch-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           document.querySelectorAll('.qv-swatch-btn').forEach(b => b.classList.remove('active'));
@@ -371,7 +280,7 @@ if (colorOpt && colorOpt.values.length > 0) {
         });
       });
 
-      // Event Listener Select Size
+      // 4. ربط قائمة المقاسات
       const sizeSelect = document.getElementById('qv-size-select-box');
       if (sizeSelect) {
         sizeSelect.addEventListener('change', function() {
@@ -379,7 +288,7 @@ if (colorOpt && colorOpt.values.length > 0) {
         });
       }
 
-      // Add to Cart Event
+      // 5. الـ Logic النهائي لإضافة المنتج + الجاكيت المخفي
       document.getElementById('qv-add-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -392,8 +301,8 @@ if (colorOpt && colorOpt.values.length > 0) {
 
         if (!matchedVariant) matchedVariant = product.variants[0];
 
-        const isBlack = selectedColor.toLowerCase() === 'black';
-        const isMedium = selectedSize.toLowerCase() === 'medium' || selectedSize.toLowerCase() === 'm';
+        const isBlack = selectedColor && selectedColor.toLowerCase() === 'black';
+        const isMedium = selectedSize && (selectedSize.toLowerCase() === 'medium' || selectedSize.toLowerCase() === 'm');
 
         let itemsToAdd = [{ id: matchedVariant.id, quantity: 1 }];
 
