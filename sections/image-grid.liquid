@@ -7,7 +7,13 @@
         {% if product != blank %}
           <div class="product-image-wrapper">
             <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="lazy">
-            <button type="button" class="quick-view-btn" data-handle="{{ product.handle }}">+</button>
+            <button type="button" 
+        class="quick-view-btn" 
+        data-handle="{{ product.handle }}"
+        data-c1-name="{{ block.settings.color_1_name }}"
+        data-c1-hex="{{ block.settings.color_1_hex }}"
+        data-c2-name="{{ block.settings.color_2_name }}"
+        data-c2-hex="{{ block.settings.color_2_hex }}">+</button>
           </div>
         {% else %}
           <div class="product-image-wrapper placeholder">
@@ -330,7 +336,6 @@
     }
   });
 </script>
-
 {% schema %}
 {
   "name": "Custom Product Grid",
@@ -340,23 +345,16 @@
       "type": "product_block",
       "name": "Product",
       "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Select Product"
-        }
+        { "type": "product", "id": "product", "label": "Select Product" },
+        { "type": "text", "id": "color_1_name", "label": "Color 1 Name", "default": "Blue" },
+        { "type": "color", "id": "color_1_hex", "label": "Color 1 Hex Code", "default": "#0D499F" },
+        { "type": "text", "id": "color_2_name", "label": "Color 2 Name", "default": "Black" },
+        { "type": "color", "id": "color_2_hex", "label": "Color 2 Hex Code", "default": "#000000" }
       ]
     }
   ],
   "presets": [
-    {
-      "name": "Custom Product Grid",
-      "blocks": [
-        { "type": "product_block" },
-        { "type": "product_block" },
-        { "type": "product_block" }
-      ]
-    }
+    { "name": "Custom Product Grid" }
   ]
 }
 {% endschema %}
