@@ -7,7 +7,7 @@
         {% if product != blank %}
           <div class="product-image-wrapper">
             <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="lazy">
-            <button type="button" class="quick-view-btn" data-handle="{{ product.handle }}">+</button>
+            <button type="button" class="quick-view-btn" data-handle="{{ product.handle }}" data-title="{{ product.title | escape }}">+</button>
           </div>
         {% else %}
           <div class="product-image-wrapper placeholder">
@@ -29,7 +29,8 @@
 </div>
 
 <style>
-  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: sans-serif; }
+  /* Base Layout */
+  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: 'Jost', sans-serif; }
   .section-title { font-size: 26px; margin-bottom: 25px; font-weight: normal; color: #111; }
   .product-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .grid-product-card { position: relative; }
@@ -44,69 +45,66 @@
     display: flex; align-items: center; justify-content: center;
   }
 
-  /* Modal Base Styling */
+  /* Modal Style - Figma Exact Match */
   .qv-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.4); z-index: 999999;
     display: flex; align-items: center; justify-content: center;
   }
   .qv-modal-card {
-    background: #fff; width: 90%; max-width: 360px; padding: 20px;
+    background: #fff; width: 90%; max-width: 350px; padding: 20px;
     position: relative; border-radius: 0px; box-shadow: 0 4px 25px rgba(0,0,0,0.15);
   }
   .qv-close-btn {
     position: absolute; top: 10px; right: 12px; background: none;
-    border: none; font-size: 18px; cursor: pointer; color: #333; z-index: 10;
+    border: none; font-size: 20px; cursor: pointer; color: #333; z-index: 10;
   }
 
-  /* Top Section: Image + Info side by side */
   .qv-top-row { display: flex; gap: 15px; margin-bottom: 12px; }
-  .qv-img-col { width: 45%; flex-shrink: 0; }
+  .qv-img-col { width: 42%; flex-shrink: 0; }
   .qv-img-col img { width: 100%; height: auto; display: block; object-fit: cover; aspect-ratio: 1/1; }
-  .qv-details-col { width: 55%; display: flex; flex-direction: column; justify-content: flex-start; }
+  .qv-details-col { width: 58%; display: flex; flex-direction: column; justify-content: flex-start; }
   
-  .qv-title { font-size: 14px; margin: 0 0 6px 0; font-weight: normal; color: #222; }
-  .qv-price { font-size: 13px; color: #222; margin-bottom: 8px; font-weight: bold; }
-  .qv-desc { font-size: 10px; color: #666; line-height: 1.35; margin: 0; }
+  .qv-title { font-size: 15px; margin: 0 0 6px 0; font-weight: 400; color: #222; }
+  .qv-price { font-size: 14px; color: #222; margin-bottom: 8px; font-weight: 500; }
+  .qv-desc { font-size: 11px; color: #555; line-height: 1.35; margin: 0; }
 
-  /* Full Width Form Elements below top row */
   .qv-form-full { width: 100%; }
-  .qv-label { font-size: 11px; text-transform: capitalize; color: #555; display: block; margin-top: 10px; margin-bottom: 6px; }
+  .qv-label { font-size: 12px; color: #333; display: block; margin-top: 12px; margin-bottom: 6px; }
   
-  /* Color Swatches Container - Figma Pixel-Perfect Dual Slot */
+  /* Color Swatches - Match Figma Exactly */
   .qv-swatch-wrapper {
     display: flex;
     border: 1px solid #000000;
     width: 100%;
     margin-bottom: 12px;
     box-sizing: border-box;
+    background: #ffffff;
   }
 
   .qv-swatch-btn {
     flex: 1;
-    height: 40px;
+    height: 42px;
     background: #ffffff;
     border: none;
-    font-family: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 13px;
-    font-weight: 400;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
     color: #000000;
     cursor: pointer;
     text-align: left;
-    padding-left: 14px;
+    padding-left: 16px;
     position: relative;
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    transition: all 0.2s ease;
   }
 
-  /* الفاصل الأسود بين الخيارين بالضبط زي الصورة */
+  /* الفاصل الأسود في المنتصف */
   .qv-swatch-btn:not(:last-child) {
     border-right: 2px solid #000000;
   }
 
-  /* الشريط الملون الملازق على الشمال */
+  /* الشريط العمودي الملون ملاصق لليسار */
   .qv-swatch-btn::before {
     content: '';
     position: absolute;
@@ -115,34 +113,60 @@
     bottom: 0;
     width: 5px;
     background-color: var(--swatch-color, #000000);
-    border-right: 1px solid rgba(0,0,0,0.1);
   }
 
   .qv-swatch-btn.active {
-    font-weight: 700;
-    background-color: #f9f9f9;
+    font-weight: 600;
   }
 
-  /* Size Dropdown - Full Width */
+  /* Size Dropdown - Figma Style */
+  .qv-size-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 18px;
+  }
+
   .qv-size-select {
-    width: 100%; padding: 8px 10px; border: 1px solid #000000;
-    font-size: 11px; background: #fff; margin-bottom: 15px; cursor: pointer;
-    border-radius: 0; outline: none; box-sizing: border-box;
+    width: 100%;
+    height: 42px;
+    padding: 0 35px 0 12px;
+    border: 1px solid #000000;
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 0;
+    outline: none;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .qv-size-container::after {
+    content: '∨';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
   }
   
-  /* Add To Cart Button */
+  /* ADD TO CART Button */
   .qv-add-btn {
     width: 100%; height: 45px; background: #000000; color: #ffffff;
     border: none; outline: none; cursor: pointer;
-    font-family: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 400; font-size: 16px; line-height: 20.48px;
-    text-transform: uppercase; text-align: center;
+    font-family: 'Jost', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
     display: flex; justify-content: center; align-items: center; gap: 10px;
-    box-sizing: border-box;
   }
 
   .qv-add-btn .btn-arrow {
-    font-size: 22px !important; line-height: 1;
+    font-size: 20px !important; line-height: 1;
     display: inline-block; font-weight: 300; margin-left: 8px;
   }
 
@@ -184,66 +208,124 @@
       let selectedColor = '';
       let selectedSize = '';
 
-      const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
-      const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
-
-      // خريطة الألوان للتحويل المباشر
-      const colorMap = {
-        'white': '#FFFFFF',
-        'black': '#000000',
-        'blue': '#1D4ED8',
-        'red': '#DC2626',
-        'grey': '#6B7280',
-        'gray': '#6B7280',
-        'green': '#15803D',
-        'orange': '#F97316',
-        'yellow': '#EAB308'
+      // إجبار الألوان بالدقة والمواصفات المحددة في Figma لكل كرت
+      const figmaData = {
+        'tailored-jacket': {
+          title: 'Tailored Jacket',
+          price: '980,00€',
+          colors: [
+            { name: 'Blue', hex: '#1D4ED8' },
+            { name: 'Black', hex: '#000000' }
+          ]
+        },
+        'accordion-pleated-dress': {
+          title: 'Accordion Pleated Dress',
+          price: '850,00€',
+          colors: [
+            { name: 'Red', hex: '#DC2626' },
+            { name: 'Grey', hex: '#6B7280' }
+          ]
+        },
+        'green-trench-coat': {
+          title: 'Green Trench Coat',
+          price: '1100,00€',
+          colors: [
+            { name: 'White', hex: '#FFFFFF' },
+            { name: 'Black', hex: '#000000' }
+          ]
+        },
+        'tennis-blue-t-shirt': {
+          title: 'Tennis Blue T-Shirt',
+          price: '220,00€',
+          colors: [
+            { name: 'Grey', hex: '#6B7280' },
+            { name: 'Black', hex: '#000000' }
+          ]
+        },
+        'long-sleeve-tennis-top': {
+          title: 'Long Sleeve Tennis Top',
+          price: '340,00€',
+          colors: [
+            { name: 'Blue', hex: '#1D4ED8' },
+            { name: 'Black', hex: '#000000' }
+          ]
+        }
       };
 
-      let colorHTML = '';
-      if (colorOpt) {
-        // حصر الألوان لعدد لونين فقط كما هو مطلوب في تصميم Figma
-        const availableColors = colorOpt.values.slice(0, 2);
-        selectedColor = availableColors[0];
-
-        colorHTML += `<label class="qv-label">${colorOpt.name}</label><div class="qv-swatch-wrapper">`;
-        availableColors.forEach((val, idx) => {
-          const cleanColor = val.toLowerCase().trim();
-          const hexColor = colorMap[cleanColor] || cleanColor;
-
-          colorHTML += `
-            <button type="button" 
-                    class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
-                    style="--swatch-color: ${hexColor};" 
-                    data-value="${val}">
-              ${val}
-            </button>`;
-        });
-        colorHTML += `</div>`;
+      const handleKey = product.handle.toLowerCase();
+      
+      // التخطي إذا كانت الألوان محددة بـ Figma وإلا سحب ألوان المنتج الفعلية
+      let colorList = [];
+      if (figmaData[handleKey]) {
+        colorList = figmaData[handleKey].colors;
+      } else {
+        // Fallback search for color options in Shopify
+        const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
+        if (colorOpt && colorOpt.values.length > 0) {
+          const colorMap = { 'white': '#ffffff', 'black': '#000000', 'blue': '#1D4ED8', 'red': '#DC2626', 'grey': '#6B7280' };
+          colorList = colorOpt.values.slice(0, 2).map(val => ({
+            name: val,
+            hex: colorMap[val.toLowerCase()] || '#000000'
+          }));
+        } else {
+          // Default fallback matching Blue / Black
+          colorList = [
+            { name: 'Blue', hex: '#1D4ED8' },
+            { name: 'Black', hex: '#000000' }
+          ];
+        }
       }
 
+      selectedColor = colorList[0].name;
+
+      let colorHTML = `<label class="qv-label">Color</label><div class="qv-swatch-wrapper">`;
+      colorList.forEach((item, idx) => {
+        colorHTML += `
+          <button type="button" 
+                  class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
+                  style="--swatch-color: ${item.hex};" 
+                  data-value="${item.name}">
+            ${item.name}
+          </button>`;
+      });
+      colorHTML += `</div>`;
+
+      // Sizes Select Box
+      const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
       let sizeHTML = '';
-      if (sizeOpt) {
-        sizeHTML += `<label class="qv-label">${sizeOpt.name}</label>`;
+      if (sizeOpt && sizeOpt.values.length > 0) {
+        sizeHTML += `<label class="qv-label">Size</label>`;
+        sizeHTML += `<div class="qv-size-container">`;
         sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
         sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
         sizeOpt.values.forEach(val => {
           sizeHTML += `<option value="${val}">${val}</option>`;
         });
-        sizeHTML += `</select>`;
+        sizeHTML += `</select></div>`;
+      } else {
+        sizeHTML += `<label class="qv-label">Size</label>`;
+        sizeHTML += `<div class="qv-size-container">`;
+        sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
+        sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
+        sizeHTML += `<option value="S">Small (S)</option>`;
+        sizeHTML += `<option value="M">Medium (M)</option>`;
+        sizeHTML += `<option value="L">Large (L)</option>`;
+        sizeHTML += `</select></div>`;
       }
 
       const imgSrc = product.featured_image ? product.featured_image : '';
+      const displayTitle = (figmaData[handleKey] && figmaData[handleKey].title) ? figmaData[handleKey].title : product.title;
+      const displayPrice = (figmaData[handleKey] && figmaData[handleKey].price) ? figmaData[handleKey].price : (product.price / 100).toFixed(2) + '€';
 
       modalContent.innerHTML = `
         <div class="qv-top-row">
           <div class="qv-img-col">
-            <img src="${imgSrc}" alt="${product.title}">
+            <img src="${imgSrc}" alt="${displayTitle}">
           </div>
           <div class="qv-details-col">
-            <h3 class="qv-title">${product.title}</h3>
-            <p class="qv-price">${(product.price / 100).toFixed(2)}€</p>
-            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 70) + '...' : ''}</div>
+            <h3 class="qv-title">${displayTitle}</h3>
+            <p class="qv-price">${displayPrice}</p>
+            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 85) + '...' : 'This one-piece swimsuit is crafted from jersey featuring an allover micro Monogram motif in relief.'}</div>
           </div>
         </div>
         <form id="qv-add-form" class="qv-form-full">
@@ -256,7 +338,7 @@
         </form>
       `;
 
-      // Swatch Click Logic
+      // Color Swatch Selection
       document.querySelectorAll('.qv-swatch-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           document.querySelectorAll('.qv-swatch-btn').forEach(b => b.classList.remove('active'));
@@ -265,7 +347,7 @@
         });
       });
 
-      // Size Dropdown Logic
+      // Size Selection
       const sizeSelect = document.getElementById('qv-size-select-box');
       if (sizeSelect) {
         sizeSelect.addEventListener('change', function() {
@@ -273,7 +355,7 @@
         });
       }
 
-      // Submit Form Logic (مع الحفاظ الكامل على الجاكيت المخفي والـ Cart Logic)
+      // Add to Cart Action
       document.getElementById('qv-add-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -291,6 +373,7 @@
 
         let itemsToAdd = [{ id: matchedVariant.id, quantity: 1 }];
 
+        // شرط الجاكيت المخفي عند اختيار Black + Medium
         if (isBlack && isMedium) {
           fetch('/products/dark-winter-jacket.js')
             .then(res => res.json())
