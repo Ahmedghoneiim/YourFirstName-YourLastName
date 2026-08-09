@@ -1,0 +1,423 @@
+<div class="custom-product-grid-section">
+  <h2 class="section-title">Tisso vison in the wild</h2>
+  <div class="product-grid-container">
+    {% for block in section.blocks %}
+      {% assign product = block.settings.product %}
+      <div class="grid-product-card" {{ block.shopify_attributes }}>
+        {% if product != blank %}
+          <div class="product-image-wrapper">
+            <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" loading="lazy">
+            <button type="button" 
+                    class="quick-view-btn" 
+                    data-handle="{{ product.handle }}"
+                    data-c1-name="{{ block.settings.color_1_name }}"
+                    data-c1-hex="{{ block.settings.color_1_hex }}"
+                    data-c2-name="{{ block.settings.color_2_name }}"
+                    data-c2-hex="{{ block.settings.color_2_hex }}">+</button>
+          </div>
+        {% else %}
+          <div class="product-image-wrapper placeholder">
+            <p>Select product</p>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div id="quick-view-modal" class="qv-modal-overlay" style="display: none;">
+  <div class="qv-modal-card">
+    <button type="button" class="qv-close-btn">&times;</button>
+    <div id="qv-modal-content">
+      <p style="text-align:center;">Loading product details...</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .custom-product-grid-section { max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: 'Jost', sans-serif; }
+  .section-title { font-size: 26px; margin-bottom: 25px; font-weight: normal; color: #111; }
+  .product-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-product-card { position: relative; }
+  .product-image-wrapper { position: relative; width: 100%; padding-top: 100%; overflow: hidden; }
+  .product-image-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+  
+  /* Button Animations & Styles */
+  .quick-view-btn {
+    position: absolute; bottom: 15px; right: 15px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #000000; color: #ffffff; border: none;
+    cursor: pointer; font-size: 20px; z-index: 5;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .quick-view-btn:hover {
+    transform: scale(1.1);
+    background: #333333;
+  }
+
+  .quick-view-btn:active {
+    transform: scale(0.95);
+  }
+
+  .qv-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.4); z-index: 999999;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qv-modal-card {
+    background: #fff; width: 90%; max-width: 350px; padding: 20px;
+    position: relative; border-radius: 0px; box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+  }
+  .qv-close-btn {
+    position: absolute; top: 10px; right: 12px; background: none;
+    border: none; font-size: 20px; cursor: pointer; color: #333; z-index: 10;
+    transition: transform 0.2s ease;
+  }
+  .qv-close-btn:hover { transform: scale(1.2); }
+
+  .qv-top-row { display: flex; gap: 15px; margin-bottom: 12px; }
+  .qv-img-col { width: 42%; flex-shrink: 0; }
+  .qv-img-col img { width: 100%; height: auto; display: block; object-fit: cover; aspect-ratio: 1/1; }
+  .qv-details-col { width: 58%; display: flex; flex-direction: column; justify-content: flex-start; }
+  
+  .qv-title { font-size: 15px; margin: 0 0 6px 0; font-weight: 400; color: #222; }
+  .qv-price { font-size: 14px; color: #222; margin-bottom: 8px; font-weight: 500; }
+  .qv-desc { font-size: 11px; color: #555; line-height: 1.35; margin: 0; }
+
+  .qv-form-full { width: 100%; }
+  .qv-label { font-size: 12px; color: #333; display: block; margin-top: 12px; margin-bottom: 6px; }
+  
+  /* Swatch Frame */
+  .qv-swatch-wrapper {
+    display: flex;
+    border: 1px solid #000000;
+    width: 100%;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    background: #ffffff;
+  }
+
+  .qv-swatch-btn {
+    flex: 1;
+    height: 42px;
+    background: #ffffff;
+    border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: #000000;
+    cursor: pointer;
+    text-align: left;
+    padding-left: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    transition: background 0.2s ease;
+  }
+
+  .qv-swatch-btn:not(:last-child) {
+    border-right: 1px solid #000000;
+  }
+
+  .qv-swatch-btn::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background-color: var(--swatch-color, #000000);
+  }
+
+  .qv-swatch-btn.active {
+    font-weight: bold;
+  }
+
+  .qv-size-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 18px;
+  }
+
+  .qv-size-select {
+    width: 100%;
+    height: 42px;
+    padding: 0 35px 0 12px;
+    border: 1px solid #000000;
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 0;
+    outline: none;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .qv-size-container::after {
+    content: '∨';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .qv-add-btn {
+    width: 100%; height: 45px; background: #000000; color: #ffffff;
+    border: none; outline: none; cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: flex; justify-content: center; align-items: center; gap: 10px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .qv-add-btn:hover {
+    background: #222222;
+    letter-spacing: 1px;
+  }
+
+  .qv-add-btn:hover .btn-arrow {
+    transform: translateX(5px);
+  }
+
+  .qv-add-btn .btn-arrow {
+    font-size: 20px !important; line-height: 1;
+    display: inline-block; font-weight: 300; margin-left: 8px;
+    transition: transform 0.3s ease;
+  }
+
+  /* Mobile Responsive Styles */
+  @media (max-width: 768px) {
+    .custom-product-grid-section { padding: 0 15px; margin: 25px auto; }
+    .section-title { font-size: 22px; text-align: center; margin-bottom: 20px; }
+    .product-grid-container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    
+    /* Perfect Sharp Mobile Quick View Button */
+    .quick-view-btn {
+      top: 10px;
+      right: 10px;
+      bottom: auto;
+      width: 30px;
+      height: 30px;
+      font-size: 20px;
+      font-weight: bold;
+      background: #FFFFFF !important;
+      color: #000000 !important;
+      border: 1px solid rgba(0, 0, 0, 0.15) !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      line-height: 1;
+      opacity: 1 !important;
+    }
+
+    .quick-view-btn:hover,
+    .quick-view-btn:active,
+    .quick-view-btn:focus {
+      background: #000000 !important;
+      color: #FFFFFF !important;
+      transform: scale(1.08);
+    }
+
+    .qv-modal-card { width: 92%; padding: 15px; }
+    .qv-swatch-btn { height: 38px; font-size: 13px; padding-left: 12px; }
+    .qv-size-select { height: 38px; font-size: 12px; }
+    .qv-add-btn { height: 42px; font-size: 13px; }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('quick-view-modal');
+    const modalContent = document.getElementById('qv-modal-content');
+    const closeBtn = document.querySelector('.qv-close-btn');
+
+    closeBtn.addEventListener('click', () => modal.style.display = 'none');
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+
+    document.querySelectorAll('.quick-view-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const handle = this.getAttribute('data-handle');
+        if (!handle) return;
+
+        modal.style.display = 'flex';
+        modalContent.innerHTML = '<p style="text-align:center;">Loading product details...</p>';
+
+        fetch('/products/' + handle + '.js')
+          .then(res => res.json())
+          .then(product => renderModal(product))
+          .catch(() => {
+            modalContent.innerHTML = '<p style="text-align:center; color:red;">Error loading product.</p>';
+          });
+      });
+    });
+
+    function getHex(colorName) {
+      const c = colorName.toLowerCase();
+      if (c.includes('blue')) return '#0D499F';
+      if (c.includes('black')) return '#000000';
+      if (c.includes('white')) return '#FFFFFF';
+      if (c.includes('red')) return '#DC2626';
+      if (c.includes('grey') || c.includes('gray')) return '#6B7280';
+      if (c.includes('green')) return '#15803D';
+      return '#000000';
+    }
+
+    function renderModal(product) {
+      let selectedColor = '';
+      let selectedSize = '';
+
+      // Extract colors safe
+      let colors = [];
+      const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color') || o.name.toLowerCase().includes('colour'));
+      if (colorOpt) {
+        colors = colorOpt.values;
+      } else {
+        colors = product.variants.map(v => v.option1).filter((v, i, a) => a.indexOf(v) === i);
+      }
+      if (!colors || colors.length === 0) colors = ['Black', 'White'];
+      selectedColor = colors[0];
+
+      let colorHTML = `<label class="qv-label">Color</label><div class="qv-swatch-wrapper">`;
+      colors.forEach((col, idx) => {
+        const hex = getHex(col);
+        colorHTML += `
+          <button type="button" 
+                  class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
+                  style="--swatch-color: ${hex};" 
+                  data-value="${col}">
+            ${col}
+          </button>`;
+      });
+      colorHTML += `</div>`;
+
+      // Extract sizes safe
+      let sizes = [];
+      const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
+      if (sizeOpt) {
+        sizes = sizeOpt.values;
+      } else {
+        sizes = ['S', 'M', 'L'];
+      }
+
+      let sizeHTML = `<label class="qv-label">Size</label><div class="qv-size-container">`;
+      sizeHTML += `<select class="qv-size-select" id="qv-size-select-box">`;
+      sizeHTML += `<option value="" disabled selected>Choose your size</option>`;
+      sizes.forEach(s => sizeHTML += `<option value="${s}">${s}</option>`);
+      sizeHTML += `</select></div>`;
+
+      modalContent.innerHTML = `
+        <div class="qv-top-row">
+          <div class="qv-img-col"><img src="${product.featured_image || ''}" alt="${product.title}"></div>
+          <div class="qv-details-col">
+            <h3 class="qv-title">${product.title}</h3>
+            <p class="qv-price">${(product.price / 100).toFixed(2)}€</p>
+            <div class="qv-desc">${product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 80) + '...' : ''}</div>
+          </div>
+        </div>
+        <form id="qv-add-form" class="qv-form-full">
+          ${colorHTML}
+          ${sizeHTML}
+          <button type="submit" class="qv-add-btn">
+            <span>ADD TO CART</span>
+            <span class="btn-arrow">&rarr;</span>
+          </button>
+        </form>
+      `;
+
+      // Active state for swatches
+      document.querySelectorAll('.qv-swatch-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.qv-swatch-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          selectedColor = this.getAttribute('data-value');
+        });
+      });
+
+      // Size dropdown change
+      const sizeSelect = document.getElementById('qv-size-select-box');
+      if (sizeSelect) {
+        sizeSelect.addEventListener('change', function() {
+          selectedSize = this.value;
+        });
+      }
+
+      // Submit Form
+      document.getElementById('qv-add-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let matchedVariant = product.variants.find(v => {
+          const opts = v.options.map(o => o.toLowerCase());
+          const hasColor = selectedColor ? opts.includes(selectedColor.toLowerCase()) : true;
+          const hasSize = selectedSize ? opts.includes(selectedSize.toLowerCase()) : true;
+          return hasColor && hasSize;
+        });
+
+        if (!matchedVariant) matchedVariant = product.variants[0];
+
+        const isBlack = selectedColor && selectedColor.toLowerCase().includes('black');
+        const isMedium = selectedSize && (selectedSize.toLowerCase().includes('medium') || selectedSize.toLowerCase() === 'm');
+
+        let itemsToAdd = [{ id: matchedVariant.id, quantity: 1 }];
+
+        if (isBlack && isMedium) {
+          fetch('/products/dark-winter-jacket.js')
+            .then(res => res.json())
+            .then(jacketProduct => {
+              if (jacketProduct && jacketProduct.variants && jacketProduct.variants[0]) {
+                itemsToAdd.push({ id: jacketProduct.variants[0].id, quantity: 1 });
+              }
+              postCart(itemsToAdd);
+            })
+            .catch(() => postCart(itemsToAdd));
+        } else {
+          postCart(itemsToAdd);
+        }
+      });
+    }
+
+    function postCart(items) {
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: items })
+      })
+      .then(res => res.json())
+      .then(() => {
+        modal.style.display = 'none';
+        window.location.href = '/cart';
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Custom Product Grid",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "product_block",
+      "name": "Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Select Product" },
+        { "type": "text", "id": "color_1_name", "label": "Color 1 Name", "default": "Blue" },
+        { "type": "color", "id": "color_1_hex", "label": "Color 1 Hex Code", "default": "#0D499F" },
+        { "type": "text", "id": "color_2_name", "label": "Color 2 Name", "default": "Black" },
+        { "type": "color", "id": "color_2_hex", "label": "Color 2 Hex Code", "default": "#000000" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Custom Product Grid" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,449 @@
+<div class="hero-master-container">
+  
+  <div class="figma-frame-1956">
+    <div class="mobile-menu-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="brand-logo">{{ section.settings.logo_text }}</div>
+    
+    <div class="mobile-dropdown-content">
+      <div class="top-center-text">{{ section.settings.top_center_text }}</div>
+      <a href="{{ section.settings.yellow_btn_link }}" class="yellow-btn-animated">
+        <span>{{ section.settings.yellow_btn_text }}</span>
+        <span class="btn-arrow">&rarr;</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="figma-group-hero">
+    <img 
+      src="{{ section.settings.bg_image | image_url: width: 3840 }}" 
+      alt="Hero Desktop Graphics" 
+      class="hero-absolute-img desktop-only-img"
+    >
+
+    {% assign mobile_img = section.settings.bg_image_mobile | default: section.settings.bg_image %}
+    <img 
+      src="{{ mobile_img | image_url: width: 800 }}" 
+      alt="Hero Mobile Graphics" 
+      class="hero-absolute-img mobile-only-img"
+    >
+
+    <div class="figma-content-locked">
+      <h1 class="hero-main-title">{{ section.settings.main_title }}</h1>
+      <p class="hero-description">{{ section.settings.description_text }}</p>
+      <a href="{{ section.settings.shop_btn_link }}" class="black-btn-animated">
+        <span>{{ section.settings.shop_btn_text }}</span>
+        <span class="btn-arrow">&rarr;</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="figma-frame-1957">
+    <span>{{ section.settings.bottom_footer_text }}</span>
+  </div>
+
+</div>
+
+<style>
+  /* Base Layout & System */
+  .hero-master-container {
+    width: 100%;
+    max-width: 3840px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .figma-frame-1956 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7vw 3.47vw;
+    height: 4.44vw;
+    min-height: 50px;
+    background: #F5F5F5;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 10;
+  }
+
+  .mobile-dropdown-content {
+    display: contents;
+  }
+
+  .mobile-menu-icon {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    width: 20px;
+  }
+
+  .mobile-menu-icon span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #000000;
+  }
+
+  .brand-logo {
+    font-size: clamp(14px, 1.2vw, 36px);
+    font-weight: 800;
+    color: #000000;
+    letter-spacing: 1.2px;
+  }
+
+  .top-center-text {
+    font-size: clamp(10px, 0.85vw, 22px);
+    color: #333333;
+  }
+
+  /* Yellow Button Animations & Styles */
+  .yellow-btn-animated {
+    background-color: #FFF200;
+    color: #000000;
+    padding: 0.6vw 1.2vw;
+    font-size: clamp(10px, 0.8vw, 20px);
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .yellow-btn-animated:hover {
+    background-color: #e6d900;
+    letter-spacing: 0.5px;
+  }
+
+  .yellow-btn-animated:hover .btn-arrow {
+    transform: translateX(4px);
+  }
+
+  .yellow-btn-animated:active {
+    transform: scale(0.96);
+  }
+
+  .figma-group-hero {
+    position: relative;
+    width: 100%;
+    padding-top: 54.166%;
+    overflow: hidden;
+  }
+
+  .hero-absolute-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    z-index: 1;
+  }
+
+  .mobile-only-img {
+    display: none;
+  }
+  .desktop-only-img {
+    display: block;
+  }
+
+  .figma-content-locked {
+    position: absolute;
+    top: 54%; 
+    left: 9.80vw; 
+    width: 30vw !important;
+    max-width: 600px;
+    z-index: 5;
+  }
+
+  .hero-main-title {
+    font-size: clamp(22px, 3.2vw, 95px);
+    font-weight: 700;
+    color: #000000 !important;
+    line-height: 1.0;
+    margin: 0 0 1vw 0;
+    letter-spacing: -1px;
+    white-space: nowrap !important;
+  }
+
+  .hero-description {
+    font-size: clamp(11px, 1.05vw, 28px);
+    color: #222222 !important;
+    line-height: 1.4;
+    margin-bottom: 1.8vw;
+  }
+
+  /* Black Main Shop Button Animations & Styles */
+  .black-btn-animated {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0.8vw 1.6vw;
+    font-size: clamp(10px, 0.85vw, 22px);
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 120px;
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .black-btn-animated:hover {
+    background-color: #222222;
+    letter-spacing: 1px;
+  }
+
+  .black-btn-animated:hover .btn-arrow {
+    transform: translateX(6px);
+  }
+
+  .black-btn-animated:active {
+    transform: scale(0.96);
+  }
+
+  .black-btn-animated .btn-arrow,
+  .yellow-btn-animated .btn-arrow {
+    font-size: 22px !important;
+    line-height: 1;
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+  }
+
+  .figma-frame-1957 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0.7vw 3.47vw;
+    height: 2.32vw;
+    min-height: 35px;
+    background: #F5F5F5;
+    box-sizing: border-box;
+    font-size: clamp(9px, 0.75vw, 20px);
+    color: #222222;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Mobile Responsive */
+  @media screen and (max-width: 768px) {
+    .desktop-only-img {
+      display: none !important;
+    }
+
+    .mobile-only-img {
+      display: block !important;
+      position: absolute;
+      width: 100%;
+      max-width: none !important;
+      height: auto;
+      top: 37.29%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
+    .figma-frame-1956 {
+      padding: 12px 20px;
+      height: 50px;
+      justify-content: flex-start;
+    }
+
+    .mobile-menu-icon {
+      display: flex;
+      position: absolute;
+      left: 20px;
+    }
+
+    .brand-logo {
+      font-size: 18px;
+      margin: 0 auto;
+      letter-spacing: 1px;
+    }
+
+    .mobile-dropdown-content {
+      display: none;
+    }
+
+    .hero-master-container.menu-open .mobile-dropdown-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: #F5F5F5;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 99;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .hero-master-container.menu-open .mobile-dropdown-content .top-center-text {
+      display: block !important;
+      font-size: 14px;
+      color: #333333;
+      margin-bottom: 15px;
+    }
+
+    .hero-master-container.menu-open .mobile-dropdown-content .yellow-btn-animated {
+      display: inline-flex !important;
+      position: static !important;
+      transform: none !important;
+      width: auto;
+      padding: 10px 20px;
+      font-size: 12px;
+    }
+
+    .hero-master-container.menu-open .mobile-menu-icon span {
+      display: none;
+    }
+
+    .hero-master-container.menu-open .mobile-menu-icon::after {
+      content: "×";
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 300;
+      display: block;
+      cursor: pointer;
+    }
+
+    .top-center-text,
+    .yellow-btn-animated {
+      display: none !important;
+    }
+
+    .figma-group-hero {
+      padding-top: 0 !important;
+      height: 520px;
+      position: relative;
+    }
+
+    .figma-content-locked {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100% !important;
+      max-width: 100%;
+      padding: 0 20px;
+      box-sizing: border-box;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 5;
+    }
+
+    .hero-main-title {
+      font-size: 32px;
+      white-space: nowrap !important;
+      margin-bottom: 30px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-description {
+      font-size: 14px;
+      line-height: 1.35;
+      max-width: 290px;
+      margin: 0 auto;
+      font-size: 0 !important;
+    }
+    .hero-description::after {
+      content: "Discover Joy: Your Ultimate Holiday Gift Destination.";
+      font-size: 14px;
+      display: block;
+      color: #222222;
+    }
+
+    .black-btn-animated {
+      position: absolute;
+      top: 337px;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 193px;
+      height: 45px;
+      padding: 13px 20px;
+      gap: 10px;
+      opacity: 1;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 20.48px;
+      letter-spacing: 0px;
+      text-transform: uppercase;
+      text-align: center;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      z-index: 6;
+    }
+
+    /* Preserve Mobile Alignment on Hover */
+    .black-btn-animated:hover {
+      transform: translateX(-50%) scale(1.02) !important;
+    }
+
+    .black-btn-animated:active {
+      transform: translateX(-50%) scale(0.96) !important;
+    }
+
+    .figma-frame-1957 {
+      padding: 12px 10px;
+      height: auto;
+      font-size: 14px;
+      text-align: center;
+      font-weight: 400;
+      line-height: 13.42px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuIcon = document.querySelector('.mobile-menu-icon');
+    const container = document.querySelector('.hero-master-container');
+    if (menuIcon && container) {
+      menuIcon.addEventListener('click', function() {
+        container.classList.toggle('menu-open');
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Custom Hero Banner",
+  "settings": [
+    { "type": "image_picker", "id": "bg_image", "label": "Desktop Image" },
+    { "type": "image_picker", "id": "bg_image_mobile", "label": "Mobile Image (Optional)" },
+    { "type": "text", "id": "logo_text", "label": "Logo", "default": "TISSO VISON" },
+    { "type": "text", "id": "top_center_text", "label": "Top Text", "default": "Find the ideal gift for your loved ones." },
+    { "type": "text", "id": "yellow_btn_text", "label": "Yellow Btn", "default": "CHOOSE GIFT" },
+    { "type": "url", "id": "yellow_btn_link", "label": "Yellow Link" },
+    { "type": "text", "id": "main_title", "label": "Title", "default": "The Gift Guide" },
+    { "type": "textarea", "id": "description_text", "label": "Desc", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
+    { "type": "text", "id": "shop_btn_text", "label": "Shop Btn", "default": "SHOP NOW" },
+    { "type": "url", "id": "shop_btn_link", "label": "Shop Link" },
+    { "type": "text", "id": "bottom_footer_text", "label": "Footer Text", "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL." }
+  ],
+  "presets": [{ "name": "Custom Hero Banner" }]
+}
+{% endschema %}

@@ -1,75 +1,109 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
+    "hero_banner_NiUPnY": {
+      "type": "hero-banner",
+      "name": "Custom Hero Banner",
+      "settings": {
+        "bg_image": "shopify://shop_images/Untitled_fbd2649f-15a4-46fe-9124-017efa9506de.png",
+        "bg_image_mobile": "shopify://shop_images/Mobile.1.png",
+        "logo_text": "TISSO VISON",
+        "top_center_text": "Find the ideal gift for your loved ones.",
+        "yellow_btn_text": "CHOOSE GIFT",
+        "yellow_btn_link": "",
+        "main_title": "The Gift Guide",
+        "description_text": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.",
+        "shop_btn_text": "SHOP NOW",
+        "shop_btn_link": "",
+        "bottom_footer_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL."
+      }
+    },
+    "image_grid_QxcFpz": {
+      "type": "image-grid",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "product_block_8ntkbL": {
+          "type": "product_block",
           "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
+            "product": "black-leather-bag",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
           }
         },
-        "button": {
-          "type": "buttons",
+        "product_block_h6bDnA": {
+          "type": "product_block",
           "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "product": "blue-silk-tuxedo",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
+          }
+        },
+        "product_block_dtAitD": {
+          "type": "product_block",
+          "settings": {
+            "product": "chequered-red-shirt",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
+          }
+        },
+        "product_block_WyF39Y": {
+          "type": "product_block",
+          "settings": {
+            "product": "classic-leather-jacket",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
+          }
+        },
+        "product_block_44LXc7": {
+          "type": "product_block",
+          "settings": {
+            "product": "classic-varsity-top",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
+          }
+        },
+        "product_block_mUwGGj": {
+          "type": "product_block",
+          "settings": {
+            "product": "dark-denim-top",
+            "color_1_name": "Blue",
+            "color_1_hex": "#0d499f",
+            "color_2_name": "Black",
+            "color_2_hex": "#000000"
           }
         }
       },
       "block_order": [
-        "heading",
-        "button"
+        "product_block_8ntkbL",
+        "product_block_h6bDnA",
+        "product_block_dtAitD",
+        "product_block_WyF39Y",
+        "product_block_44LXc7",
+        "product_block_mUwGGj"
       ],
-      "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
-        "image_behavior": "none",
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
-      }
-    },
-    "featured_collection": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "Featured products",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "swipe_on_mobile": false,
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "padding_top": 44,
-        "padding_bottom": 36
-      }
+      "name": "Image Grid (Quick View)",
+      "settings": {}
     }
   },
   "order": [
-    "image_banner",
-    "featured_collection"
+    "hero_banner_NiUPnY",
+    "image_grid_QxcFpz"
   ]
 }
