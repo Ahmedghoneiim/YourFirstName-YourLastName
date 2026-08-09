@@ -85,26 +85,24 @@
 
   .qv-swatch-btn {
     flex: 1;
-    height: 40px;
+    height: 42px;
     background: #ffffff;
     border: none;
-    font-family: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 13px;
-    font-weight: 400;
+    font-family: 'Jost', -apple-system, sans-serif;
+    font-size: 14px;
     color: #000000;
     cursor: pointer;
     text-align: left;
-    padding-left: 14px;
+    padding-left: 16px;
     position: relative;
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    transition: all 0.2s ease;
   }
 
   /* الفاصل الأسود بين الخيارين بالضبط زي الصورة */
   .qv-swatch-btn:not(:last-child) {
-    border-right: 2px solid #000000;
+    border-right: 3px solid #000000;  
   }
 
   /* الشريط الملون الملازق على الشمال */
@@ -114,14 +112,20 @@
     left: 0;
     top: 0;
     bottom: 0;
-    width: 5px;
+    width: 4px;
     background-color: var(--swatch-color, #000000);
-    border-right: 1px solid rgba(0,0,0,0.1);
+  }
+  .qv-swatch-btn[data-value="Blue"] {
+    --swatch-color: #0F52BA; /* الأزرق الملكي نفس الصورة */
+  }
+  .qv-swatch-btn[data-value="Black"] {
+    --swatch-color: #000000; /* الأسود */
   }
 
   .qv-swatch-btn.active {
-    font-weight: 700;
-    background-color: #f9f9f9;
+    outline: 1.5px solid #000000;
+    outline-offset: -1.5px;
+    font-weight: 500;
   }
 
   /* Size Dropdown - Full Width */
@@ -321,6 +325,15 @@
       });
     }
   });
+  <label class="qv-label">Color</label>
+<div class="qv-swatch-wrapper">
+  <button type="button" class="qv-swatch-btn active" data-value="Blue">
+    Blue
+  </button>
+  <button type="button" class="qv-swatch-btn" data-value="Black">
+    Black
+  </button>
+</div>
 </script>
 
 {% schema %}
