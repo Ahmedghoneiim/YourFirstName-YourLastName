@@ -73,45 +73,64 @@
   .qv-form-full { width: 100%; }
   .qv-label { font-size: 11px; text-transform: capitalize; color: #555; display: block; margin-top: 10px; margin-bottom: 6px; }
   
-  /* Color Swatches - Figma Style with Colored Left Border Indicator */
-  .qv-swatch-wrapper { display: flex; border: 1px solid #CCCCCC; width: 100%; margin-bottom: 10px; }
-  .qv-swatch-btn {
-    flex: 1; padding: 8px 0; background: #fff; border: none; font-size: 11px;
-    cursor: pointer; text-align: center; color: #111; border-right: 1px solid #CCCCCC;
-    transition: all 0.2s ease; position: relative;
-    display: flex; align-items: center; justify-content: center; gap: 6px;
+  /* Color Swatches Container - Figma Pixel-Perfect Dual Slot */
+  .qv-swatch-wrapper {
+    display: flex;
+    border: 1px solid #000000;
+    width: 100%;
+    margin-bottom: 12px;
+    box-sizing: border-box;
   }
-  .qv-swatch-btn:last-child { border-right: none; }
-  
-  /* Left Border Swatch Accent (Color Indicator) */
+
+  .qv-swatch-btn {
+    flex: 1;
+    height: 40px;
+    background: #ffffff;
+    border: none;
+    font-family: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #000000;
+    cursor: pointer;
+    text-align: left;
+    padding-left: 14px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  /* الفاصل الأسود بين الخيارين بالضبط زي الصورة */
+  .qv-swatch-btn:not(:last-child) {
+    border-right: 2px solid #000000;
+  }
+
+  /* الشريط الملون الملازق على الشمال */
   .qv-swatch-btn::before {
     content: '';
-    display: inline-block;
-    width: 4px;
-    height: 100%;
     position: absolute;
     left: 0;
     top: 0;
-    background-color: transparent;
+    bottom: 0;
+    width: 5px;
+    background-color: var(--swatch-color, #000000);
+    border-right: 1px solid rgba(0,0,0,0.1);
   }
 
-  .qv-swatch-btn[data-color-badge="white"]::before { background-color: #FFFFFF; border-right: 1px solid #ddd; }
-  .qv-swatch-btn[data-color-badge="black"]::before { background-color: #000000; }
-  .qv-swatch-btn[data-color-badge="blue"]::before { background-color: #1E40AF; }
-  .qv-swatch-btn[data-color-badge="red"]::before { background-color: #991B1B; }
-  .qv-swatch-btn[data-color-badge="grey"]::before,
-  .qv-swatch-btn[data-color-badge="gray"]::before { background-color: #6B7280; }
-
-  .qv-swatch-btn.active { border: 1.5px solid #000000; font-weight: bold; }
+  .qv-swatch-btn.active {
+    font-weight: 700;
+    background-color: #f9f9f9;
+  }
 
   /* Size Dropdown - Full Width */
   .qv-size-select {
-    width: 100%; padding: 8px 10px; border: 1px solid #CCCCCC;
+    width: 100%; padding: 8px 10px; border: 1px solid #000000;
     font-size: 11px; background: #fff; margin-bottom: 15px; cursor: pointer;
     border-radius: 0; outline: none; box-sizing: border-box;
   }
   
-  /* Add To Cart Button - Matching Exact Figma Spec */
+  /* Add To Cart Button */
   .qv-add-btn {
     width: 100%; height: 45px; background: #000000; color: #ffffff;
     border: none; outline: none; cursor: pointer;
@@ -121,6 +140,7 @@
     display: flex; justify-content: center; align-items: center; gap: 10px;
     box-sizing: border-box;
   }
+
   .qv-add-btn .btn-arrow {
     font-size: 22px !important; line-height: 1;
     display: inline-block; font-weight: 300; margin-left: 8px;
@@ -167,13 +187,37 @@
       const colorOpt = product.options.find(o => o.name.toLowerCase().includes('color'));
       const sizeOpt = product.options.find(o => o.name.toLowerCase().includes('size'));
 
+      // خريطة الألوان للتحويل المباشر
+      const colorMap = {
+        'white': '#FFFFFF',
+        'black': '#000000',
+        'blue': '#1D4ED8',
+        'red': '#DC2626',
+        'grey': '#6B7280',
+        'gray': '#6B7280',
+        'green': '#15803D',
+        'orange': '#F97316',
+        'yellow': '#EAB308'
+      };
+
       let colorHTML = '';
       if (colorOpt) {
-        selectedColor = colorOpt.values[0];
+        // حصر الألوان لعدد لونين فقط كما هو مطلوب في تصميم Figma
+        const availableColors = colorOpt.values.slice(0, 2);
+        selectedColor = availableColors[0];
+
         colorHTML += `<label class="qv-label">${colorOpt.name}</label><div class="qv-swatch-wrapper">`;
-        colorOpt.values.forEach((val, idx) => {
-          const colorKey = val.toLowerCase().trim();
-          colorHTML += `<button type="button" class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" data-color-badge="${colorKey}" data-value="${val}">${val}</button>`;
+        availableColors.forEach((val, idx) => {
+          const cleanColor = val.toLowerCase().trim();
+          const hexColor = colorMap[cleanColor] || cleanColor;
+
+          colorHTML += `
+            <button type="button" 
+                    class="qv-swatch-btn ${idx === 0 ? 'active' : ''}" 
+                    style="--swatch-color: ${hexColor};" 
+                    data-value="${val}">
+              ${val}
+            </button>`;
         });
         colorHTML += `</div>`;
       }
@@ -229,7 +273,7 @@
         });
       }
 
-      // Submit Form Logic
+      // Submit Form Logic (مع الحفاظ الكامل على الجاكيت المخفي والـ Cart Logic)
       document.getElementById('qv-add-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
