@@ -1,17 +1,18 @@
-<div class="hero-wrapper">
-  <div class="custom-hero-banner" style="background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');">
-    
-    <div class="banner-top-bar">
-      <div class="brand-logo">{{ section.settings.logo_text }}</div>
-      <div class="top-center-text">{{ section.settings.top_center_text }}</div>
-      <a href="{{ section.settings.yellow_btn_link }}" class="yellow-btn-animated">
-        <span>{{ section.settings.yellow_btn_text }}</span>
-        <span class="btn-arrow">&rarr;</span>
-      </a>
-    </div>
+<div class="hero-master-container">
+  
+  <!-- Frame 1956: Top Bar -->
+  <div class="figma-frame-1956">
+    <div class="brand-logo">{{ section.settings.logo_text }}</div>
+    <div class="top-center-text">{{ section.settings.top_center_text }}</div>
+    <a href="{{ section.settings.yellow_btn_link }}" class="yellow-btn-animated">
+      <span>{{ section.settings.yellow_btn_text }}</span>
+      <span class="btn-arrow">&rarr;</span>
+    </a>
+  </div>
 
-    <!-- المربع ده متثبت بالبكسل بالنسبة لأبعاد الـ Banner -->
-    <div class="banner-content-box">
+  <!-- Group 1000007949: Middle Main Hero Section -->
+  <div class="figma-group-hero" style="background-image: url('{{ section.settings.bg_image | image_url: width: 3840 }}');">
+    <div class="figma-content-locked">
       <h1 class="hero-main-title">{{ section.settings.main_title }}</h1>
       <p class="hero-description">{{ section.settings.description_text }}</p>
       <a href="{{ section.settings.shop_btn_link }}" class="black-btn-animated">
@@ -19,67 +20,124 @@
         <span class="btn-arrow">&rarr;</span>
       </a>
     </div>
-
-    <div class="banner-bottom-bar">
-      <span>{{ section.settings.bottom_footer_text }}</span>
-    </div>
-
   </div>
+
+  <!-- Frame 1957: Bottom Bar -->
+  <div class="figma-frame-1957">
+    <span>{{ section.settings.bottom_footer_text }}</span>
+  </div>
+
 </div>
 
 <style>
-  .hero-wrapper {
+  .hero-master-container {
     width: 100%;
-    max-width: 1440px;
+    max-width: 3840px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 
-  .custom-hero-banner {
+  /* Frame 1956 CSS (Mapped from 3840px canvas) */
+  .figma-frame-1956 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7vw 3.47vw; /* 26.66px & 133.33px relative to 3840px */
+    height: 4.44vw; /* 170.67px relative to 3840px */
+    background: #F5F5F5;
+    box-sizing: border-box;
+  }
+
+  .brand-logo {
+    font-size: clamp(14px, 1.2vw, 36px);
+    font-weight: 800;
+    color: #000000;
+    letter-spacing: 1.2px;
+  }
+
+  .top-center-text {
+    font-size: clamp(10px, 0.85vw, 22px);
+    color: #333333;
+  }
+
+  .yellow-btn-animated {
+    background-color: #FFF200;
+    color: #000000;
+    padding: 0.6vw 1.2vw;
+    font-size: clamp(10px, 0.8vw, 20px);
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Group 1000007949 CSS (Mapped 3840x2080) */
+  .figma-group-hero {
     position: relative;
     width: 100%;
-    padding-top: 56.25%; /* نسبة 16:9 أبعاد ثابتة تمسح أي ترحيل */
+    padding-top: 54.166% !important; /* Aspect Ratio 2080/3840 */
     background-size: 100% 100% !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
-    background-color: #ffffff;
   }
 
-  .banner-top-bar {
+  .figma-content-locked {
     position: absolute;
-    top: 24px;
-    left: 40px;
-    right: 40px;
-    display: flex;
+    top: 52%; 
+    left: 3.47vw; /* 133.33px alignment */
+    width: 25vw;
+    z-index: 5;
+  }
+
+  .hero-main-title {
+    font-size: clamp(28px, 4.2vw, 120px);
+    font-weight: 700;
+    color: #000000 !important;
+    line-height: 1.0;
+    margin: 0 0 1vw 0;
+    letter-spacing: -1px;
+  }
+
+  .hero-description {
+    font-size: clamp(11px, 1.05vw, 28px);
+    color: #222222 !important;
+    line-height: 1.4;
+    margin-bottom: 1.8vw;
+  }
+
+  .black-btn-animated {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0.8vw 1.6vw;
+    font-size: clamp(10px, 0.85vw, 22px);
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 5;
+    min-width: 120px;
   }
 
-  .brand-logo { font-size: 16px; font-weight: 800; color: #000; }
-  .top-center-text { font-size: 11px; color: #333; }
-  .yellow-btn-animated { background: #FFF200; color: #000; padding: 10px 20px; font-size: 11px; font-weight: 700; text-decoration: none; }
-
-  /* مكان النص مضبوط بالملي في الفراغ الأبيض */
-  .banner-content-box {
-    position: absolute;
-    top: 55%; 
-    left: 4.5%;
-    width: 32%;
-    z-index: 5;
-  }
-
-  .hero-main-title { font-size: 3.5vw; font-weight: 600; color: #000; margin: 0 0 12px 0; line-height: 1; }
-  .hero-description { font-size: 0.85vw; color: #222; line-height: 1.4; margin-bottom: 20px; }
-  .black-btn-animated { background: #000; color: #fff; padding: 10px 20px; font-size: 0.75vw; font-weight: 700; text-decoration: none; display: inline-flex; justify-content: space-between; width: 120px; }
-
-  .banner-bottom-bar {
-    position: absolute;
-    bottom: 12px;
-    width: 100%;
-    text-align: center;
-    font-size: 10px;
-    color: #222;
+  /* Frame 1957 CSS (Mapped from 3840px canvas) */
+  .figma-frame-1957 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0.7vw 3.47vw; /* 26.66px & 133.33px relative to 3840px */
+    height: 2.32vw; /* 89.33px relative to 3840px */
+    background: #F5F5F5;
+    box-sizing: border-box;
+    font-size: clamp(9px, 0.75vw, 20px);
+    color: #222222;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 </style>
 
